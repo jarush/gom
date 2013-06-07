@@ -1,6 +1,9 @@
 *.o
-gpio/bcm2835-1.25
-gpio/bcm2835-1.25.tar.gz
+buildroot-2013.02/
+downloads/
+linux/
+tools/
+gpio/bcm2835-1.25/
 gpio/src/gpiod
 gpio/src/test
-web/etc
+web/etc/
