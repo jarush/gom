@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Initial system configuration
+#
+
+case "$1" in
+  start)
+    echo "Mounting filesystems..."
+
+    # Mount proc
+    /bin/mount -t proc proc /proc
+
+    # Remount the root filesystem RW
+    /bin/mount -o remount,rw /
+
+    # Configure missing dev mount-points and mount the remaining filesystems
+    /bin/mkdir -p /dev/pts
+    /bin/mount -a
+
+    # Configure the hostname
+    echo "Setting hostname..."
+    /bin/hostname -F /etc/hostname
+    ;;
+
+  stop)
+    ;;
+
+  restart|reload)
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?
+
+
+

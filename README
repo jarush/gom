@@ -1,0 +1,110 @@
+#
+# Instructions for building the Garage-O-Matic Kernel and Filesystem
+#
+# Host dependencies:
+#   make
+#   flex
+#   bison
+#   gcc
+#   gettext
+#   texinfo
+#   libncurses5-dev
+#   git
+#   svn
+#
+# Comprehensive list of dependencies found here:
+# http://buildroot.uclibc.org/downloads/manual/manual.html#requirement-mandatory
+#
+
+#
+# Environment
+#
+
+export RPI_PATH=/home/jarush/rpi
+
+#
+# Toolchain
+#
+
+git clone https://github.com/raspberrypi/tools.git
+
+# Add the build tools to the path
+export PATH=$PATH:$RPI_PATH/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin
+
+#
+# Kernel
+#
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- mrproper
+cp config.rpi .config
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+cp arch/arm/boot/zImage ../bootfs/kernel.img
+
+#
+# Buildroot
+#
+# Config Options:
+#
+# Target Architecture: ARM (little endian)
+# Target Architecture Variant: generic_arm
+# Toolchain  --->
+#   Toolchain type: External toolchain
+#   Toolchain: Custom toolchain
+#   Toolchain origin: Pre-installed toolchain
+#   Toolchain path: $RPI_PATH/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian
+#   Toolchain prefix: arm-linux-gnueabihf
+#   External toolchain C library: glibc/eglibc
+#   Toolchain has C++ support: Yes
+# System configuration  --->
+#   System hostname: gom
+#   System banner: Welcome to Garage-O-Matic
+#   Passwords encoding: sha-256
+#   /dev management: Dynamic using mdev
+#   Root password: root
+#   Port to run a getty (login prompt) on: ttyAMA0
+# Package Selection for the target  --->
+#   Interpreter languages and scripting  --->
+#     php: Yes
+#   Networking applications  --->
+#     dropbear: Yes
+#     lighttpd: Yes
+#       openssl support: Yes
+#       zlib support: Yes
+#       pcre support: Yes
+#     wireless tools: Yes
+#     wpa_supplicant: Yes
+#       Install wpa_cli binary: Yes
+#       Install wpa_passphrase binary: Yes
+# Filesystem images  --->
+#   cpio the root filesystem: Yes
+#     Compression method: gzip
+
+make menuconfig
+make
+
+#
+# MicroSD Card
+#
+
+# Formating
+sudo mkfs.vfat -n bootfs /dev/sdb1
+sudo mkfs.ext4 -L rootfs /dev/sdb2
+
+# Installing root filesystem
+sudo tar -xavf $RPI_PATH/buildroot-2013.02/output/images/rootfs.tar -C /media/rootfs/
+#sudo chown -R root.root /media/garage/
+
+# Unmounting device
+sudo umount /dev/sdb1 /dev/sdb2
+
+
+
+
+
+
+patch  -p1  <  ../aufs3-standalone/aufs3-kbuild.patch
+patch  -p1  <  ../aufs3-standalone/aufs3-base.patch
+patch  -p1  <  ../aufs3-standalone/aufs3-proc_map.patch
+patch  -p1  <  ../aufs3-standalone/aufs3-standalone.patch
+cp -a ../aufs3-standalone/fs/ .
+cp -a ../aufs3-standalone/include/linux/aufs_type.h include/linux/
+

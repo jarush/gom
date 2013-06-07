@@ -1,0 +1,1 @@
+dwc_otg.lpm_enable=0 initrd=0xa00000,0xbd2c1 root=/dev/ram0 elevator=noop rootwait

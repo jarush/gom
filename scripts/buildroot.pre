@@ -1,0 +1,7 @@
+#!/bin/sh
+
+TARGETDIR=$1
+
+rm -f $TARGETDIR/etc/os-release
+rm -f $TARGETDIR/etc/init.d/S20urandom
+

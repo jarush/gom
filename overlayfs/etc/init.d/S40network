@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+case "$1" in
+  start)
+    echo "Starting network..."
+
+    # Wait for eth0 since it's a USB device
+    nsecs=4
+    while [ $nsecs -gt 0 -a ! -e /sys/class/net/eth0 ]; do
+      echo "Waiting for eth0"
+      sleep 1
+      nsecs=$(($nsecs-1))
+    done
+
+    /sbin/ifup -a
+    ;;
+  stop)
+    echo -n "Stopping network..."
+    /sbin/ifdown -a
+    ;;
+  restart|reload)
+    "$0" stop
+    "$0" start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?
+
