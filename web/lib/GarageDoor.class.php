@@ -24,7 +24,7 @@ class GarageDoor {
   }
 
   public function pressButton() {
-    $this->gpioClient->toggle($this->relayGpio, 1, 250);
+    $this->gpioClient->toggleGpio($this->relayGpio, 1, 250);
   }
 }
 
