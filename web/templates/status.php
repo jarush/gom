@@ -2,14 +2,9 @@
 
 <div class="well door">
   <h3>Garage Door 1</h3>
-  <p class="lead">Status: Closed</p>
-  <button class="btn btn-large btn-primary" door="1" status="closed">Open</button>
-</div>
 
-<div class="well door">
-  <h3>Garage Door 2</h3>
-  <p class="lead">Status: Open</p>
-  <button class="btn btn-large btn-primary" door="2", status="closed">Open</button>
+  <p class="lead">Status: <?php echo $garageDoor->getStatus(); ?></p>
+  <button class="btn btn-large btn-primary" door="1" status="closed">Open</button>
 </div>
 
 <script type="text/javascript">
