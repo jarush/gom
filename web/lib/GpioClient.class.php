@@ -15,7 +15,10 @@ class GpioClient {
   }
 
   public function close() {
-    fclose($this->fp);
+    if ($this->fp) {
+      fclose($this->fp);
+      $this->fp = false;
+    }
   }
 
   public function sendMessage($message) {

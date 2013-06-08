@@ -29,6 +29,8 @@ int gpio_read(gpio_t *gpio);
 
 void gpio_set(gpio_t *gpio);
 void gpio_clr(gpio_t *gpio);
+void gpio_toggle_high(gpio_t *gpio, int duration);
+void gpio_toggle_low(gpio_t *gpio, int duration);
 
 int gpio_process(event_mgr_t *event_mgr, int fd, void *data);
 

@@ -123,6 +123,18 @@ void gpio_clr(gpio_t *gpio) {
   bcm2835_gpio_clr(gpio->pin);
 }
 
+void gpio_toggle_high(gpio_t *gpio, int duration) {
+  bcm2835_gpio_set(gpio->pin);
+  usleep(duration * 1000);
+  bcm2835_gpio_clr(gpio->pin);
+}
+
+void gpio_toggle_low(gpio_t *gpio, int duration) {
+  bcm2835_gpio_clr(gpio->pin);
+  usleep(duration * 1000);
+  bcm2835_gpio_set(gpio->pin);
+}
+
 int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
   gpio_t *gpio = (gpio_t*)data;
   uint64_t exp;
