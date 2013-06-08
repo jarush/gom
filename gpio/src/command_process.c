@@ -33,7 +33,7 @@ int command_process(netcon_client_t *netcon_client, const char *command) {
 
   if (strcmp(tokens[0], "get") == 0) {
     command_get(netcon_client, tokens, num_tokens);
-  } else if (strcmp(tokens[0], "get") == 0) {
+  } else if (strcmp(tokens[0], "set") == 0) {
     command_set(netcon_client, tokens, num_tokens);
   } else if (strcmp(tokens[0], "exit") == 0) {
     command_exit(netcon_client, tokens, num_tokens);
