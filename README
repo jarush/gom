@@ -20,7 +20,7 @@
 # Environment
 #
 
-export RPI_PATH=/home/jarush/rpi
+export RPI_PATH=/home/jarush/gom
 
 #
 # Toolchain
