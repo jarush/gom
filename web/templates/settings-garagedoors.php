@@ -44,14 +44,14 @@ foreach ($garageDoors as $gd) {
                  required="required" />
         </td>
         <td>
-          <input type="text" name="sensorGpio[]" value="<?php echo $gd->getSensorGpio(); ?>"
+          <input type="text" name="sensorGpio[]" class="input-mini" value="<?php echo $gd->getSensorGpio(); ?>"
                  required="required" pattern="\d+" />
         </td>
         <td>
-          <input type="text" name="relayGpio[]" value="<?php echo $gd->getRelayGpio(); ?>"
+          <input type="text" name="relayGpio[]" class="input-mini" value="<?php echo $gd->getRelayGpio(); ?>"
                  required="required" pattern="\d+" />
         </td>
-        <td>
+        <td class="text-center">
           <input type="button" class="btn" name="remove" value="Remove" />
         </td>
       </tr>
@@ -90,6 +90,7 @@ foreach ($garageDoors as $gd) {
           $('<input>').attr({
             'type'     : 'text',
             'name'     : 'sensorGpio[]',
+            'class'    : 'input-mini',
             'required' : 'required',
             'pattern'  : '\\d+',
           })
@@ -98,6 +99,7 @@ foreach ($garageDoors as $gd) {
           $('<input>').attr({
             'type'     : 'text',
             'name'     : 'relayGpio[]',
+            'class'    : 'input-mini',
             'required' : 'required',
             'pattern'  : '\\d+',
           })
