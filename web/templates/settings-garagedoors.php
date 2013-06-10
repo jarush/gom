@@ -3,7 +3,8 @@ include 'header.inc.php';
 include 'settings-tabs.inc.php';
 
 // Get the network configuration
-$c = new Config('garagedoors.properties');
+//$c = new Config('garagedoors.properties');
+$garageDoors = GarageDoor::loadGarageDoors('garagedoors.properties', null);
 ?>
 
 <?php
@@ -32,30 +33,22 @@ if (isset($status)) {
     <tbody>
 <?php
 
-$garageDoors = 0;
-for ($i = 0; $i < 10; $i++) {
-  $name = $c->get('name' . $i, null);
-  $sensorGpio = $c->get('sensorGpio' . $i, null);
-  $relayGpio = $c->get('relayGpio' . $i, null);
-
-  if ($name == null || $sensorGpio == null || $relayGpio == null) {
-    continue;
-  }
-
-  $garageDoors++;
+$numGarageDoors = 0;
+foreach ($garageDoors as $gd) {
+  $numGarageDoors++;
 
 ?>
       <tr>
         <td>
-          <input type="text" name="name[]" value="<?php echo $name; ?>"
+          <input type="text" name="name[]" value="<?php echo $gd->getName(); ?>"
                  required="required" />
         </td>
         <td>
-          <input type="text" name="sensorGpio[]" value="<?php echo $sensorGpio; ?>"
+          <input type="text" name="sensorGpio[]" value="<?php echo $gd->getSensorGpio(); ?>"
                  required="required" pattern="\d+" />
         </td>
         <td>
-          <input type="text" name="relayGpio[]" value="<?php echo $relayGpio; ?>"
+          <input type="text" name="relayGpio[]" value="<?php echo $gd->getRelayGpio(); ?>"
                  required="required" pattern="\d+" />
         </td>
         <td>
@@ -75,14 +68,14 @@ for ($i = 0; $i < 10; $i++) {
 </form>
 
 <script type="text/javascript">
-  garageDoors = <?php echo $garageDoors; ?>;
+  numGarageDoors = <?php echo $numGarageDoors; ?>;
 
   $('#add_door').click(function() {
-    if (garageDoors >= 10) {
+    if (numGarageDoors >= 10) {
       return;
     }
 
-    garageDoors++;
+    numGarageDoors++;
 
     $('tbody').append(
       $('<tr>').append([
@@ -117,7 +110,7 @@ for ($i = 0; $i < 10; $i++) {
             'value' : 'Remove'
           }).click(function() {
             $(this).parents('tr').remove();
-            garageDoors--;
+            numGarageDoors--;
           })
         ),
       ])
@@ -126,7 +119,7 @@ for ($i = 0; $i < 10; $i++) {
 
   $('input[name="remove"]').click(function() {
     $(this).parents('tr').remove();
-    garageDoors--;
+    numGarageDoors--;
   });
 </script>
 

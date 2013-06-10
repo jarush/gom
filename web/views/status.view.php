@@ -5,12 +5,12 @@ $gpioPort = 6965;
 
 $app->get('/', $authMw, function () use($app, $gpioHost, $gpioPort) {
   $gpioClient = new GpioClient($gpioHost, $gpioPort);
-  $garageDoor = new GarageDoor($gpioClient, 0, 1);
+  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
 
   $app->render('status.php', array(
     'site'    => 'Garage',
     'title'   => 'Status',
-    'garageDoor' => $garageDoor,
+    'garageDoors' => $garageDoors,
   ));
 });
 
@@ -29,8 +29,8 @@ $app->post('/door/status', $authMw, function () use($app, $gpioHost, $gpioPort) 
 
   $gpioClient = new GpioClient($gpioHost, $gpioPort);
 
-  $garageDoor = new GarageDoor($gpioClient, 0, 1);
-  $status = $garageDoor->getStatus();
+  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
+  $status = $garageDoors[$door]->getStatus();
 
   echo json_encode(array(
     'status'     => 'ok',
@@ -54,8 +54,8 @@ $app->post('/door/pressbutton', $authMw, function () use($app, $gpioHost, $gpioP
 
   $gpioClient = new GpioClient($gpioHost, $gpioPort);
 
-  $garageDoor = new GarageDoor($gpioClient, 0, 1);
-  $garageDoor->pressButton();
+  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
+  $garageDoors[$door]->pressButton();
 
   echo json_encode(array(
     'status'   => 'ok',

@@ -24,7 +24,9 @@ class GpioClient {
   public function sendMessage($message) {
     fputs($this->fp, $message . "\n");
 
-    return fgets($this->fp);
+    $response = fgets($this->fp);
+
+    return $response;
   }
 
   public function getGpio($gpio) {

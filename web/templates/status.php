@@ -3,12 +3,34 @@
 <div id="alert-area">
 </div>
 
-<div class="well door" door="1">
-  <h3>Garage Door 1</h3>
+<?php
+$n = count($garageDoors);
+for ($i = 0; $i < $n; $i++) {
+  $name = $garageDoors[$i]->getName();
+  $status = $garageDoors[$i]->getStatus();
+  $buttonClass = '';
+  if ($status == 'Open') {
+    $buttonClass = 'btn-danger';
+  }
+?>
 
-  <p class="lead" door="1">Status: <?php echo $garageDoor->getStatus(); ?></p>
-  <button class="btn btn-large btn-primary" door="1" status="closed">Open</button>
+<div class="well door" door="<?php echo $i; ?>">
+  <h3>Door: <?php echo $name; ?></h3>
+
+  <p class="lead" door="<?php echo $i; ?>">
+    Status: <?php echo $status; ?>
+  </p>
+
+  <button class="btn btn-large btn-primary <?php echo $buttonClass; ?>"
+          door="<?php echo $i; ?>"
+          status="<?php echo $status; ?>">
+    <?php echo $status == "Open" ? "Close" : "Open"; ?>
+  </button>
 </div>
+
+<?php
+}
+?>
 
 <script type="text/javascript">
   function showAlert(alertClass, title, message) {
@@ -37,7 +59,7 @@
     var door = btn.attr('door');
 
     // Disable the button and update the button text
-    if (btn.attr('status') == 'open') {
+    if (btn.attr('status') == 'Open') {
       btn.addClass('disabled');
       btn.text('Closing...');
     } else {
@@ -88,12 +110,11 @@
         p.text('Status: ' + data.doorStatus);
 
         var btn = div.children('button');
+        btn.attr('status', data.doorStatus);
         if (data.doorStatus == 'Closed') {
-          btn.attr('status', 'closed');
           btn.text('Open');
           btn.removeClass('btn-danger');
         } else {
-          btn.attr('status', 'open');
           btn.text('Close');
           btn.addClass('btn-danger');
         }
