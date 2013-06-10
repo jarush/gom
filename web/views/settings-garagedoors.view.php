@@ -36,7 +36,7 @@ $app->post('/settings/garagedoors', $authMw, function () use($app) {
     $app->render('settings-garagedoors.php', array(
       'site'   => 'Garage',
       'title'  => 'Settings',
-      'tab'    => 'Network',
+      'tab'    => 'Garage Doors',
       'status' => 'Failed to save settings',
     ));
     return;
@@ -45,7 +45,7 @@ $app->post('/settings/garagedoors', $authMw, function () use($app) {
   $app->render('settings-garagedoors.php', array(
     'site'   => 'Garage',
     'title'  => 'Settings',
-    'tab'    => 'Network',
+    'tab'    => 'Garage Doors',
     'status' => 'Settings saved successfully',
   ));
 });
