@@ -32,6 +32,7 @@ if (isset($status)) {
     <tbody>
 <?php
 
+$garageDoors = 0;
 for ($i = 0; $i < 10; $i++) {
   $name = $c->get('name' . $i, null);
   $sensorGpio = $c->get('sensorGpio' . $i, null);
@@ -40,6 +41,8 @@ for ($i = 0; $i < 10; $i++) {
   if ($name == null || $sensorGpio == null || $relayGpio == null) {
     continue;
   }
+
+  $garageDoors++;
 
 ?>
       <tr>
@@ -56,7 +59,7 @@ for ($i = 0; $i < 10; $i++) {
                  required="required" pattern="\d+" />
         </td>
         <td>
-          <input type='button' id='remove' value='Remove' />
+          <input type="button" class="btn" name="remove" value="Remove" />
         </td>
       </tr>
 <?php
@@ -72,44 +75,58 @@ for ($i = 0; $i < 10; $i++) {
 </form>
 
 <script type="text/javascript">
+  garageDoors = <?php echo $garageDoors; ?>;
+
   $('#add_door').click(function() {
-    numDoors = 0;
+    if (garageDoors >= 10) {
+      return;
+    }
+
+    garageDoors++;
+
     $('tbody').append(
       $('<tr>').append([
         $('<td>').append(
           $('<input>').attr({
-            'type' : 'text',
-            'name' : 'name[]'
+            'type'     : 'text',
+            'name'     : 'name[]',
+            'required' : 'required',
           })
         ),
         $('<td>').append(
           $('<input>').attr({
-            'type' : 'text',
-            'name' : 'sensorGpio[]'
+            'type'     : 'text',
+            'name'     : 'sensorGpio[]',
+            'required' : 'required',
+            'pattern'  : '\\d+',
           })
         ),
         $('<td>').append(
           $('<input>').attr({
-            'type' : 'text',
-            'name' : 'relayGpio[]'
+            'type'     : 'text',
+            'name'     : 'relayGpio[]',
+            'required' : 'required',
+            'pattern'  : '\\d+',
           })
         ),
         $('<td>').append(
           $('<input>').attr({
             'type'  : 'button',
-            'id'    : 'remove_door',
             'class' : 'btn',
+            'name'  : 'remove',
             'value' : 'Remove'
           }).click(function() {
             $(this).parents('tr').remove();
+            garageDoors--;
           })
         ),
       ])
     );
   });
 
-  $('#remove_door').click(function() {
+  $('input[name="remove"]').click(function() {
     $(this).parents('tr').remove();
+    garageDoors--;
   });
 </script>
 
