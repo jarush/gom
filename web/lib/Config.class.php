@@ -3,8 +3,12 @@
 class Config {
   private $ini;
 
-  public function __construct($filename) {
-    $this->ini = parse_ini_file(APP_ROOT . '/etc/' . $filename, false, INI_SCANNER_RAW);
+  public function __construct($filename = false) {
+    if ($filename) {
+      $this->ini = parse_ini_file(APP_ROOT . '/etc/' . $filename, false, INI_SCANNER_RAW);
+    } else {
+      $this->ini = array();
+    }
   }
 
   public function get($name, $default) {
