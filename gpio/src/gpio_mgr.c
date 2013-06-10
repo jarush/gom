@@ -33,15 +33,18 @@ int gpio_mgr_load_config(config_t *config) {
   int i;
 
   for (i = 0; i < MAX_GPIO; i++) {
-    snprintf(str, sizeof(str), "gpio%d.pin", i);
-    int pin = config_get_int32(config, str, -1);
-    if (pin == -1) {
+    // Parse the direction
+    snprintf(str, sizeof(str), "gpio%d.direction", i);
+    int direction = config_get_int32(config, str, -1);
+    if (direction == -1) {
       continue;
     }
 
-    // Parse the direction
-    snprintf(str, sizeof(str), "gpio%d.direction", i);
-    int direction = config_get_int32(config, str, 0);
+    // Allocate the gpio
+    gpios[i] = gpio_alloc(i);
+    if (gpios[i] == NULL) {
+      return -1;
+    }
 
     // Configure it as either an input or output
     if (direction == GPIO_DIR_INPUT) {
@@ -52,6 +55,8 @@ int gpio_mgr_load_config(config_t *config) {
       int nsec = config_get_int32(config, str, -1);
       if (sec < 0 || nsec < 0) {
         fprintf(stderr, "Invalid interval (%ds %dns) for gpio%d\n", sec, nsec, i);
+        gpio_release(gpios[i]);
+        gpios[i] = NULL;
         return -1;
       }
 
@@ -64,28 +69,22 @@ int gpio_mgr_load_config(config_t *config) {
       action_t *action = action_alloc(config, str);
       if (action == NULL) {
         fprintf(stderr, "Failed to create action\n");
-        return -1;
-      }
-
-      // Allocate the gpio
-      gpios[i] = gpio_alloc(pin);
-      if (gpios[i] == NULL) {
+        gpio_release(gpios[i]);
+        gpios[i] = NULL;
         return -1;
       }
 
       // Configure the GPIO as an input
       if (gpio_set_input(gpios[i], sec, nsec, active_low, action) == -1) {
+        gpio_release(gpios[i]);
+        gpios[i] = NULL;
         return -1;
       }
     } else {
-      // Allocate the gpio
-      gpios[i] = gpio_alloc(pin);
-      if (gpios[i] == NULL) {
-        return -1;
-      }
-
       // Configure the GPIO as an output
       if (gpio_set_output(gpios[i]) == -1) {
+        gpio_release(gpios[i]);
+        gpios[i] = NULL;
         return -1;
       }
     }
