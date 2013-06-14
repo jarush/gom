@@ -1,5 +1,6 @@
 *.o
 buildroot-2013.02/
+buildroot-2013.05/
 downloads/
 linux/
 tools/
