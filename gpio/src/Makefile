@@ -1,7 +1,9 @@
 CC = arm-linux-gnueabihf-gcc
-CPPFLAGS = -I../bcm2835-1.25/src/
+CPPFLAGS = -I../bcm2835-1.25/src/ -I../../buildroot-2013.02/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/include
 CFLAGS = -g -Wall
-LIBS = ../bcm2835-1.25/src/libbcm2835.a
+LDFLAGS = -L../../buildroot-2013.02/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib \
+          -Wl,-rpath-link=../../buildroot-2013.02/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib
+LIBS = ../bcm2835-1.25/src/libbcm2835.a -lcurl
 
 TARGET = gpiod
 SRCS = $(wildcard *.c)

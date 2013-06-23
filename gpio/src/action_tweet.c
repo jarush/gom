@@ -11,7 +11,7 @@
 #define URL "http://api.supertweet.net/1.1/statuses/update.json"
 
 static int action_tweet_callback(void *action_ptr, int value);
-size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
+static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
 
 action_tweet_t* action_tweet_alloc(config_t *config, const char *prefix) {
   action_tweet_t *action;
@@ -27,7 +27,7 @@ action_tweet_t* action_tweet_alloc(config_t *config, const char *prefix) {
   // Initialize the structure
   action->parent.callback = action_tweet_callback;
 
-  // Get the message
+  // Get the username
   snprintf(str, sizeof(str), "%s.username", prefix);
   const char *username = config_get_string(config, str, NULL);
   if (username == NULL) {
@@ -37,7 +37,7 @@ action_tweet_t* action_tweet_alloc(config_t *config, const char *prefix) {
   }
   strncpy(action->username, username, sizeof(action->username));
 
-  // Get the message
+  // Get the password
   snprintf(str, sizeof(str), "%s.password", prefix);
   const char *password = config_get_string(config, str, NULL);
   if (password == NULL) {
@@ -65,6 +65,12 @@ static int action_tweet_callback(void *action_ptr, int value) {
   CURL *curl;
   CURLcode res;
   char str[1024];
+
+  if (value == 0) {
+    return 0;
+  }
+
+  printf("Tweeting\n");
 
   // Initialize cURL
   curl_global_init(CURL_GLOBAL_ALL);

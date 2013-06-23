@@ -3,7 +3,8 @@
  */
 #include "action.h"
 #include "action_print.h"
-#include "action_http.h"
+#include "action_tweet.h"
+#include "action_email.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,8 +21,10 @@ action_t* action_alloc(config_t *config, const char *prefix) {
   // Parse the action
   if (strcmp(type, "print") == 0) {
     action = (action_t*)action_print_alloc(config, prefix);
-  } else if (strcmp(type, "http") == 0) {
-    action = (action_t*)action_http_alloc(config, prefix);
+  } else if (strcmp(type, "tweet") == 0) {
+    action = (action_t*)action_tweet_alloc(config, prefix);
+  } else if (strcmp(type, "email") == 0) {
+    action = (action_t*)action_email_alloc(config, prefix);
   } else {
     fprintf(stderr, "Invalid action type: %s\n", type);
     return NULL;
