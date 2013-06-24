@@ -13,6 +13,9 @@
 
 static int initialized = 0;
 
+static void timespec_sub(struct timespec *a,
+    struct timespec *b, struct timespec *res);
+
 gpio_t* gpio_alloc(int pin) {
   gpio_t *gpio;
 
@@ -47,12 +50,13 @@ gpio_t* gpio_alloc(int pin) {
 }
 
 int gpio_set_input(gpio_t *gpio, int sec, int nsec,
-    int active_low, action_t *action) {
+    int active_low, double trigger_time, action_t *action) {
   struct itimerspec new_value;
 
   // Initialize the structure
   gpio->direction = GPIO_DIR_INPUT;
   gpio->active_low = active_low;
+  gpio->trigger_time = trigger_time;
   gpio->action = action;
 
   // Configure the pin as an input
@@ -135,8 +139,24 @@ void gpio_toggle_low(gpio_t *gpio, int duration) {
   bcm2835_gpio_set(gpio->pin);
 }
 
+void timespec_sub(struct timespec *a,
+    struct timespec *b, struct timespec *res) {
+  res->tv_sec = a->tv_sec - b->tv_sec;
+  res->tv_nsec = a->tv_nsec - b->tv_nsec;
+  if (res->tv_nsec < 0) {
+    res->tv_sec = res->tv_sec - 1;
+    res->tv_nsec += 1000000000;
+  }
+}
+
+double timespec_seconds(struct timespec *ts) {
+  return ts->tv_sec + ts->tv_nsec / 1000000000.0;
+}
+
 int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
   gpio_t *gpio = (gpio_t*)data;
+  struct timespec current_time;
+  struct timespec delta_time;
   uint64_t exp;
   int value;
 
@@ -146,12 +166,27 @@ int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
   // Read the GPIO value
   value = gpio_read(gpio);
 
+  // Get the current time
+  clock_gettime(CLOCK_MONOTONIC, &current_time);
+
   // Check if the GPIO value has changed
   if (gpio->previous_value == -1 || value != gpio->previous_value) {
-    if (gpio->action->callback(gpio->action, value) == -1) {
-      fprintf(stderr, "Failed to invoke action callback\n");
-    }
     gpio->previous_value = value;
+    gpio->previous_time = current_time;
+  }
+
+  // Check if the GPIO value has been high long enough to trigger the action
+  if (gpio->previous_value == 1) {
+    // Compute how long the GPIO has been high
+    timespec_sub(&current_time, &gpio->previous_time, &delta_time);
+    double delta_seconds = timespec_seconds(&delta_time);
+
+    // Trigger the action if the trigger time has ellapsed
+    if (delta_seconds > gpio->trigger_time) {
+      if (gpio->action->callback(gpio->action, value) == -1) {
+        fprintf(stderr, "Failed to invoke action callback\n");
+      }
+    }
   }
 
   return 0;

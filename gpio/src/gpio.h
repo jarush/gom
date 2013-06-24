@@ -4,6 +4,7 @@
 #ifndef __GPIO_H__
 #define __GPIO_H__
 
+#include <time.h>
 #include "action.h"
 #include "event_mgr.h"
 
@@ -14,14 +15,16 @@ typedef struct {
   int pin;
   int direction;
   int active_low;
+  double trigger_time;
   action_t *action;
   int fd;
   int previous_value;
+  struct timespec previous_time;
 } gpio_t;
 
 gpio_t* gpio_alloc(int pin);
 int gpio_set_input(gpio_t *gpio, int sec, int nsec,
-    int active_low, action_t *action);
+    int active_low, double trigger_time, action_t *action);
 int gpio_set_output(gpio_t *gpio);
 void gpio_release(gpio_t *gpio);
 

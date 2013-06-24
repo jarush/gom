@@ -3,7 +3,7 @@ CPPFLAGS = -I../bcm2835-1.25/src/ -I../../buildroot-2013.02/output/host/usr/arm-
 CFLAGS = -g -Wall
 LDFLAGS = -L../../buildroot-2013.02/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib \
           -Wl,-rpath-link=../../buildroot-2013.02/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib
-LIBS = ../bcm2835-1.25/src/libbcm2835.a -lcurl
+LIBS = ../bcm2835-1.25/src/libbcm2835.a -lcurl -lrt
 
 TARGET = gpiod
 SRCS = $(wildcard *.c)

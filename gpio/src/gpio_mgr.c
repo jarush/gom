@@ -64,6 +64,10 @@ int gpio_mgr_load_config(config_t *config) {
       snprintf(str, sizeof(str), "gpio%d.active_low", i);
       int active_low = config_get_int32(config, str, 0);
 
+      // Parse the GPIO trigger timer
+      snprintf(str, sizeof(str), "gpio%d.trigger_time", i);
+      double trigger_time = config_get_double(config, str, 0.0);
+
       // Parse the action to perform
       snprintf(str, sizeof(str), "gpio%d.action", i);
       action_t *action = action_alloc(config, str);
@@ -75,7 +79,8 @@ int gpio_mgr_load_config(config_t *config) {
       }
 
       // Configure the GPIO as an input
-      if (gpio_set_input(gpios[i], sec, nsec, active_low, action) == -1) {
+      if (gpio_set_input(gpios[i], sec, nsec,
+            active_low, trigger_time, action) == -1) {
         gpio_release(gpios[i]);
         gpios[i] = NULL;
         return -1;
