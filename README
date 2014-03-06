@@ -34,14 +34,23 @@ export PATH=$PATH:$RPI_PATH/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-ras
 #
 # Kernel
 #
+
+# Clone the RPI fork of the kernel
+git clone https://github.com/raspberrypi/linux.git
+
+# Clean the project
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- mrproper
-cp config.rpi .config
+
+cp config/linux-rpi-3.10.y.config linux/.config
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 cp arch/arm/boot/zImage ../bootfs/kernel.img
 
 #
 # Buildroot
 #
+
 # Config Options:
 #
 # Target Architecture: ARM (little endian)
@@ -78,7 +87,16 @@ cp arch/arm/boot/zImage ../bootfs/kernel.img
 #   cpio the root filesystem: Yes
 #     Compression method: gzip
 
+# If starting from scratch, run the following:
+make raspberrypi_defconfig
+
+# Otherwise, copy the correct buildroot config from the config/ dir to buildroot-YYYY.MM/.config
+cp config/buildroot-2014.02.config buildroot-2014.02/.config
+
+# Customize buildroot using the menuconfig
 make menuconfig
+
+# Build
 make
 
 #
