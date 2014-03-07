@@ -4,13 +4,14 @@
 # Host dependencies:
 #   make
 #   flex
+#   bc
 #   bison
 #   gcc
 #   gettext
-#   texinfo
-#   libncurses5-dev
 #   git
+#   libncurses5-dev
 #   svn
+#   texinfo
 #
 # Comprehensive list of dependencies found here:
 # http://buildroot.uclibc.org/downloads/manual/manual.html#requirement-mandatory
