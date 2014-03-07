@@ -109,8 +109,8 @@ sudo mkfs.vfat -n bootfs /dev/sdb1
 sudo mkfs.ext4 -L rootfs /dev/sdb2
 
 # Installing root filesystem
+mount /dev/sdb2 /media/rootfs
 sudo tar -xavf $RPI_PATH/buildroot-2013.02/output/images/rootfs.tar -C /media/rootfs/
-#sudo chown -R root.root /media/garage/
 
 # Unmounting device
 sudo umount /dev/sdb1 /dev/sdb2
