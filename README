@@ -1,7 +1,12 @@
-#
-# Instructions for building the Garage-O-Matic Kernel and Filesystem
-#
-# Host dependencies:
+##
+## Instructions for building the Garage-O-Matic Kernel and Filesystem
+##
+
+###############################################################################
+## Host dependencies
+##
+
+# Make ure the following packages are installed on the host computer:
 #   make
 #   flex
 #   bc
@@ -17,24 +22,33 @@
 # http://buildroot.uclibc.org/downloads/manual/manual.html#requirement-mandatory
 #
 
-#
-# Environment
-#
+apt-get install make flex bc bison gcc gettext git libncurses5-dev svn texinfo
 
-export RPI_PATH=/home/jarush/gom
+###############################################################################
+## Environment
+##
 
-#
-# Toolchain
-#
+# Set the RPI_PATH environment variable to the gom/ directory
+cd gom
+export RPI_PATH=`pwd`
 
+# Or source the env.sh file to setup the RPI_PATH and add the toolchain to the
+# PATH:
+. env.sh
+
+###############################################################################
+## Toolchain
+##
+
+# Clone the toolchain from the Raspberry PI's GitHub repository
 git clone https://github.com/raspberrypi/tools.git
 
 # Add the build tools to the path
 export PATH=$PATH:$RPI_PATH/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin
 
-#
-# Kernel
-#
+###############################################################################
+## Linux Kernel
+##
 
 # Clone the RPI fork of the kernel
 git clone https://github.com/raspberrypi/linux.git
@@ -42,15 +56,17 @@ git clone https://github.com/raspberrypi/linux.git
 # Clean the project
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- mrproper
 
+# Customize the kernel using menuconfig
 cp config/linux-rpi-3.10.y.config linux/.config
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
 
+# Build the kernel and copy the compress kernel image to the boot parition
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-cp arch/arm/boot/zImage ../bootfs/kernel.img
+cp arch/arm/boot/zImage /media/bootfs/kernel.img
 
-#
-# Buildroot
-#
+###############################################################################
+## Buildroot
+##
 
 # Config Options:
 #
@@ -100,18 +116,56 @@ make menuconfig
 # Build
 make
 
-#
-# MicroSD Card
-#
+###############################################################################
+## MicroSD Card
+##
 
 # Formating
 sudo mkfs.vfat -n bootfs /dev/sdb1
 sudo mkfs.ext4 -L rootfs /dev/sdb2
 
-# Installing root filesystem
-mount /dev/sdb2 /media/rootfs
-sudo tar -xavf $RPI_PATH/buildroot-2013.02/output/images/rootfs.tar -C /media/rootfs/
+# Installing boot files
+sudo mount /dev/sdb1 /media/bootfs
+sudo cp $RPI_PATH/buildroot-2014.02/output/images/rpi-firmware/* /media/bootfs/
+sudo cp $RPI_PATH/linux/arch/arm/boot/zImage /media/bootfs/kernel.img
+sudo umount /dev/sdb1
 
-# Unmounting device
-sudo umount /dev/sdb1 /dev/sdb2
+# Installing root filesystem
+sudo mount /dev/sdb2 /media/rootfs
+sudo tar -xavf $RPI_PATH/buildroot-2014.02/output/images/rootfs.tar -C /media/rootfs/
+sudo umount /dev/sdb2
+
+###############################################################################
+## Ram disk
+##
+
+# Mount the boot partition
+sudo mount /dev/sdb1 /media/bootfs
+
+# Copy the buildroot compressed cpio image to the boot partition
+cp $RPI_PATH/buildroot-2014.02/output/images/rootfs.cpio.gz /media/bootfs/init.gz
+
+#
+# Modify the config.txt file to specify the init file to load.  Add the
+# following line to load the init.gz file to address 0x00A00000:
+#
+#   initramfs init.gz 0x00A00000
+#
+# Or copy the existing config_initramfs.txt file to the boot partition
+cp $RPI_PATH/bootfs/config_initramfs.txt /media/bootfs/config.txt
+
+#
+# Modify the cmdline.txt file to specify the kernel parameters to load the
+# ramdisk as an initrd image.
+#
+#   initrd=0xA00000,<size> root=/dev/ram0
+#
+# Where <size> is the size of the init.gz file in bytes as a hex value.
+#
+# Or copy the existing cmdline_initramfs.txt file to the boot partition, and
+# update the size to reflect the correct size of the init.gz file:
+cp $RPI_PATH/bootfs/cmdline_initramfs.txt /media/bootfs/cmdline.txt
+
+# Unmount the boot partition
+sudo umount /dev/sdb1
 
