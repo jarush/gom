@@ -5,3 +5,9 @@ TARGETDIR=$1
 rm -f $TARGETDIR/etc/os-release
 rm -f $TARGETDIR/etc/init.d/S20urandom
 
+cp $RPI_PATH/gpio/src/gpiod.properties $TARGETDIR/etc/
+cp $RPI_PATH/gpio/src/gpiod $TARGETDIR/usr/bin/
+
+cp -R $RPI_PATH/web/* $TARGETDIR/var/www/
+fakeroot chown -R www-data.www-data $TARGETDIR/var/www/
+

@@ -8,8 +8,3 @@ iface eth0 inet static
   netmask 255.255.255.0
   gateway 192.168.0.1
 
-#auto wlan0
-#iface wlan0 inet dhcp
-#  pre-up wpa_supplicant -B -Dwext -iwlan0 -c/etc/wpa_supplicant.conf
-#  post-down killall -q wpa_supplicant
-

@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Starts GPIO daemon
+#
+
+start() {
+  echo -n "Starting gpiod: "
+  start-stop-daemon -S -q -p /var/run/gpiod.pid \
+    --exec /usr/bin/gpiod -- /etc/gpiod.properties
+  [ $? == 0 ] && echo "OK" || echo "FAIL"
+}
+
+stop() {
+  echo -n "Stopping gpiod: "
+  start-stop-daemon -K -q -p /var/run/gpiod.pid
+  [ $? == 0 ] && echo "OK" || echo "FAIL"
+}
+
+restart() {
+  stop
+  start
+}
+
+case "$1" in
+  start)
+    start
+  ;;
+  stop)
+    stop
+  ;;
+  restart|reload)
+    restart
+  ;;
+  *)
+  echo "Usage: $0 {start|stop|restart}"
+  exit 1
+esac
+
+exit $?
