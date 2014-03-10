@@ -1,6 +1,7 @@
 *.o
 buildroot-*/
 downloads/
+firmware/
 linux/
 tools/
 overlayfs/etc/wpa_supplicant.conf
