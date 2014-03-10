@@ -54,14 +54,14 @@ export PATH=$PATH:$RPI_PATH/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-ras
 git clone https://github.com/raspberrypi/linux.git
 
 # Clean the project
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- mrproper
+make ARCH=arm mrproper
 
 # Customize the kernel using menuconfig
 cp config/linux-rpi-3.10.y.config linux/.config
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+make ARCH=arm menuconfig
 
 # Build the kernel and copy the compress kernel image to the boot parition
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+make ARCH=arm
 cp arch/arm/boot/zImage /media/bootfs/kernel.img
 
 ###############################################################################
