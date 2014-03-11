@@ -3,13 +3,6 @@
 $authMw = function() use($app) {
   $req = $app->request();
 
-  // Check if running on an iPhone or iPad
-  $userAgent = $req->getUserAgent();
-  if (strstr($userAgent, 'iPhone') || strstr($userAgent, 'iPad')) {
-    // Extend the session cookie lifetime
-    $app->setCookie(session_name(), session_id(), time() + (3600*24*100));
-  }
-
   // Check if the session is set
   if (!empty($_SESSION['username'])) {
     return;
@@ -30,7 +23,8 @@ $authMw = function() use($app) {
       // Set the session variable
       $_SESSION['username'] = $username;
 
-      $app->redirect('/');
+      $uri = $req->getRootUri() . $req->getResourceUri();
+      $app->redirect($uri);
 
       return;
     } else {
