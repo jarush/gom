@@ -16,10 +16,6 @@ $authMw = function() use($app) {
     $config = new Config('login.properties');
     if ($username == $config->get('username', null) &&
         $password == $config->get('password', null)) {
-      // Update the cookie with the current time
-      $app->setCookie('username', $username, time() + (3600*24*100), '/', '', true);
-      $app->setCookie('password', $password, time() + (3600*24*100), '/', '', true);
-
       // Set the session variable
       $_SESSION['username'] = $username;
 
@@ -60,8 +56,9 @@ $app->post('/login', function() use($app) {
   // Set the cookie if we're supposed to remember
   $remember = $req->post('remember');
   if ($remember == true) {
-    $app->setCookie('username', $username, time() + (3600*24*100), '/', '', true);
-    $app->setCookie('password', $password, time() + (3600*24*100), '/', '', true);
+    // Since the RPI doesn't have a clock, set the expiration time to a max value
+    $app->setCookie('username', $username, 0x7FFFFFFF, '/', '', true);
+    $app->setCookie('password', $password, 0x7FFFFFFF, '/', '', true);
   }
 
   // Set the session variable
