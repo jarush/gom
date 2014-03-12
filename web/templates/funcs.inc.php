@@ -7,12 +7,12 @@ function showAlert($status, $message) {
   } else if ($status === 'warning') {
     $alertClass = 'alert-warning';
   } else if ($status === 'error') {
-    $alertClass = 'alert-error';
+    $alertClass = 'alert-danger';
   }
 
-  echo "<div id='alert' class='alert $alertClass'>";
-  echo "  <button type='button' class='close' data-dismiss='alert'>&times;</button>";
-  echo "<h4>$message</h4>";
+  echo "<div id='alert' class='alert $alertClass alert-dismissable'>";
+  echo "  <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>";
+  echo "  $message";
   echo "</div>";
 }
 

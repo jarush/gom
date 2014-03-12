@@ -44,10 +44,10 @@ for ($i = 0; $i < $n; $i++) {
   function showAlert(alertClass, title, message) {
     var html = '';
 
-    html += '<div id="alert" class="alert ' + alertClass + '">';
-    html += '  <button type="button" class="close" data-dismiss="alert">&times;</button>';
+    html += '<div id="alert" class="alert ' + alertClass + ' alert-dismissable">';
+    html += '  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
     if (title) {
-      html += '  <h4>' + title + '</h4>';
+      html += '  <strong>' + title + '</strong>';
     }
     html += message;
     html += '</div>';
@@ -88,7 +88,7 @@ for ($i = 0; $i < $n; $i++) {
       showAlert('alert-success', 'Success', 'Command sent to garage door opener');
     })
     .fail(function(xhr, textStatus, errorThrown) {
-      showAlert('alert-error', 'Error', 'Failed to send command to garage door opener');
+      showAlert('alert-danger', 'Error', 'Failed to send command to garage door opener');
     })
     .complete(function() {
       window.setTimeout(updateStatus, 5000);

@@ -6,7 +6,6 @@
 
     <!-- Stylesheets -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -37,10 +36,6 @@
         padding: 7px 9px;
       }
     </style>
-
-    <!-- javascript libraries -->
-    <script src="/js/jquery-1.9.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
 
     <!-- iOS specific settings -->
     <?php include 'ios.inc.php'; ?>

@@ -46,31 +46,33 @@ if (isset($status)) {
 <form class="form-horizontal" method="post">
   <fieldset>
     <legend>Wireless Interface</legend>
-    <div class="control-group">
-      <label class="control-label" for="wlan">Interface</label>
-      <div class="controls">
-        <label class="radio inline">
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan">Interface</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
           <input type="radio" name="wlan" value="enabled"
                  <?php echo ($wlan) ? 'checked' : ''?>/>Enabled
         </label>
-        <label class="radio inline">
+        <label class="radio-inline">
           <input type="radio" name="wlan" value="disabled"
                  <?php echo (!$wlan) ? 'checked' : ''?>/>Disabled
         </label>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_ssid">SSID</label>
-      <div class="controls">
-        <input type="text" name="wlan_ssid" placeholder="SSID" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_ssid">SSID</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="wlan_ssid"
+               placeholder="SSID" required="required"
                <?php echo $wlan_disabled; ?>
                value="<?php echo $c->get('wlan_ssid', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_security_mode">Security Mode</label>
-      <div class="controls">
-        <select name="wlan_security_mode" <?php echo $wlan_disabled; ?>>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_security_mode">Security Mode</label>
+      <div class="col-sm-10">
+        <select name="wlan_security_mode" class="form-control"
+                <?php echo $wlan_disabled; ?>>
         <?php
           $modes = array('WPA2 Personal', 'WPA Personal', 'WEP');
           $selected_mode = $c->get('wlan_security_mode', null);
@@ -82,52 +84,56 @@ if (isset($status)) {
         </select>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_key">Key</label>
-      <div class="controls">
-        <input type="text" name="wlan_key" placeholder="Key" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_key">Key</label>
+      <div class="col-sm-10">
+        <input type="text" name="wlan_key" class="form-control"
+               placeholder="Key" required="required"
                <?php echo $wlan_disabled; ?>
                value="<?php echo $c->get('wlan_key', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_dhcp">DHCP</label>
-      <div class="controls">
-        <label class="radio inline">
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_dhcp">DHCP</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
           <input type="radio" name="wlan_dhcp" value="enabled"
                <?php echo $wlan_disabled; ?>
                <?php echo ($wlan_dhcp) ? 'checked' : ''?>/>Enabled
         </label>
-        <label class="radio inline">
+        <label class="radio-inline">
           <input type="radio" name="wlan_dhcp" value="disabled"
                <?php echo $wlan_disabled; ?>
                <?php echo (!$wlan_dhcp) ? 'checked' : ''?>/>Disabled
         </label>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_static_address">Static Address</label>
-      <div class="controls">
-        <input type="text" name="wlan_static_address" placeholder="IP Address"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_static_address">Static Address</label>
+      <div class="col-sm-10">
+        <input type="text" name="wlan_static_address" class="form-control"
+               placeholder="IP Address" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $wlan_dhcp_disabled; ?>
                value="<?php echo $c->get('wlan_static_address', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_static_netmask">Netmask</label>
-      <div class="controls">
-        <input type="text" name="wlan_static_netmask" placeholder="Netmask"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_static_netmask">Netmask</label>
+      <div class="col-sm-10">
+        <input type="text" name="wlan_static_netmask" class="form-control"
+               placeholder="Netmask" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $wlan_dhcp_disabled; ?>
                value="<?php echo $c->get('wlan_static_netmask', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="wlan_static_gateway">Gateway</label>
-      <div class="controls">
-        <input type="text" name="wlan_static_gateway" placeholder="Gateway Address"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="wlan_static_gateway">Gateway</label>
+      <div class="col-sm-10">
+        <input type="text" name="wlan_static_gateway" class="form-control"
+               placeholder="Gateway Address" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $wlan_dhcp_disabled; ?>
                value="<?php echo $c->get('wlan_static_gateway', ''); ?>"/>
       </div>
@@ -136,66 +142,71 @@ if (isset($status)) {
 
   <fieldset class="disable">
     <legend>Ethernet Interface</legend>
-    <div class="control-group">
-      <label class="control-label" for="eth">Interface</label>
-      <div class="controls">
-        <label class="radio inline">
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="eth">Interface</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
           <input type="radio" name="eth" value="enabled"
                  <?php echo ($eth) ? 'checked' : ''?>/>Enabled
         </label>
-        <label class="radio inline">
+        <label class="radio-inline">
           <input type="radio" name="eth" value="disabled"
                  <?php echo (!$eth) ? 'checked' : ''?>/>Disabled
         </label>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="eth_dhcp">DHCP</label>
-      <div class="controls">
-        <label class="radio inline">
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="eth_dhcp">DHCP</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
           <input type="radio" name="eth_dhcp" value="enabled"
                  <?php echo $eth_disabled; ?>
                  <?php echo ($eth_dhcp) ? 'checked' : ''?>/>Enabled
         </label>
-        <label class="radio inline">
+        <label class="radio-inline">
           <input type="radio" name="eth_dhcp" value="disabled"
                  <?php echo $eth_disabled; ?>
                  <?php echo (!$eth_dhcp) ? 'checked' : ''?>/>Disabled
         </label>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="eth_static_address">Static Address</label>
-      <div class="controls">
-        <input type="text" name="eth_static_address" placeholder="IP Address"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="eth_static_address">Static Address</label>
+      <div class="col-sm-10">
+        <input type="text" name="eth_static_address" class="form-control"
+               placeholder="IP Address" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $eth_dhcp_disabled; ?>
                value="<?php echo $c->get('eth_static_address', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="eth_static_netmask">Netmask</label>
-      <div class="controls">
-        <input type="text" name="eth_static_netmask" placeholder="Netmask"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="eth_static_netmask">Netmask</label>
+      <div class="col-sm-10">
+        <input type="text" name="eth_static_netmask" class="form-control"
+               placeholder="Netmask" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $eth_dhcp_disabled; ?>
                value="<?php echo $c->get('eth_static_netmask', ''); ?>"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="eth_static_gateway">Gateway</label>
-      <div class="controls">
-        <input type="text" name="eth_static_gateway" placeholder="Gateway Address"
-               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required="required"
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="eth_static_gateway">Gateway</label>
+      <div class="col-sm-10">
+        <input type="text" name="eth_static_gateway" class="form-control"
+               placeholder="Gateway Address" required="required"
+               pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
                <?php echo $eth_dhcp_disabled; ?>
                value="<?php echo $c->get('eth_static_gateway', ''); ?>"/>
       </div>
     </div>
   </fieldset>
 
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="reset" class="btn">Reset</button>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="reset" class="btn">Reset</button>
+    </div>
   </div>
 </form>
 
