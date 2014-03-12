@@ -169,23 +169,23 @@ int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
   // Get the current time
   clock_gettime(CLOCK_MONOTONIC, &current_time);
 
-  // Check if the GPIO value has changed
-  if (gpio->previous_value == -1 || value != gpio->previous_value) {
-    gpio->previous_value = value;
-    gpio->previous_time = current_time;
-  }
-
   // Check if the GPIO value has been high long enough to trigger the action
-  if (gpio->previous_value == 1) {
+  if (value != gpio->previous_value) {
     // Compute how long the GPIO has been high
-    timespec_sub(&current_time, &gpio->previous_time, &delta_time);
-    double delta_seconds = timespec_seconds(&delta_time);
+    double delta_seconds = -1;
+    if (gpio->previous_value != -1) {
+      timespec_sub(&current_time, &gpio->previous_time, &delta_time);
+      delta_seconds = timespec_seconds(&delta_time);
+    }
 
     // Trigger the action if the trigger time has ellapsed
-    if (delta_seconds > gpio->trigger_time) {
+    if (delta_seconds < 0 || delta_seconds > gpio->trigger_time) {
       if (gpio->action->callback(gpio->action, value) == -1) {
         fprintf(stderr, "Failed to invoke action callback\n");
       }
+
+      gpio->previous_value = value;
+      gpio->previous_time = current_time;
     }
   }
 
