@@ -5,39 +5,101 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #include "config.h"
 #include "event_mgr.h"
 #include "netcon.h"
 #include "gpio_mgr.h"
 
+typedef struct {
+  int dont_fork;
+  int log_stderr;
+  const char *filename;
+} options_t;
+
+void usage(const char *error_message, int return_value) {
+  if (error_message != NULL) {
+    fprintf(stderr, "%s\n\n", error_message);
+  }
+
+  fprintf(stderr, "Usage: gpiod [-d -e] <config file>\n");
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Options:\n");
+  fprintf(stderr, "  -d  Don't fork into the background\n");
+  fprintf(stderr, "  -e  Log error messages to stderr as well as syslog\n");
+  fprintf(stderr, "  -h  Display this help\n");
+
+  exit(return_value);
+}
+
+void parse_options(char *argv[], int argc, options_t *options) {
+  int opt;
+
+  options->dont_fork = 0;
+  options->log_stderr = 0;
+  options->filename = NULL;
+
+  while ((opt = getopt(argc, argv, "+deh")) != -1) {
+    switch (opt) {
+      case 'd':
+        options->dont_fork = 1;
+        break;
+
+      case 'e':
+        options->log_stderr = 1;
+        break;
+
+      case 'h':
+        usage(NULL, 0);
+        break;
+
+      case '?':
+      default:
+        usage("Error parsing command line arguments", 1);
+        return;
+    }
+  }
+
+  if (optind >= argc) {
+    usage("Missing required <config file> argument", 1);
+    return;
+  }
+
+  options->filename = argv[optind];
+
+  return;
+}
+
 int main(int argc, char *argv[]) {
+  options_t options;
   config_t config;
   event_mgr_t event_mgr;
   netcon_t *netcon;
   int i;
 
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s <config file>\n", argv[0]);
-    return 1;
-  }
+  // Parse the command line options
+  parse_options(argv, argc, &options);
 
-  // Initialize the configuration
+  // Initialize and read the configuration file
   config_init(&config);
-
-  // Read the config file
-  if (config_read(&config, argv[1]) == -1) {
+  if (config_read(&config, options.filename) == -1) {
     return 1;
   }
 
-  // Check if we should fork into a background process
-  if (config_get_int32(&config, "daemon", 0) != 0) {
+  // Check if we shouldn't fork into the background
+  if (options.dont_fork == 0) {
     // Fork into the background
     if (daemon(0, 0) == -1) {
       perror("daemon");
       return 1;
     }
   }
+
+  // Open syslog
+  int log_flags = options.log_stderr ? LOG_PERROR : 0;
+  openlog("gpiod", LOG_CONS | LOG_PID | LOG_NDELAY | log_flags, LOG_DAEMON);
+  syslog(LOG_INFO, "Program started");
 
   // Initialize the event manager
   event_mgr_init(&event_mgr);
@@ -47,6 +109,7 @@ int main(int argc, char *argv[]) {
   if ((netcon = netcon_alloc(port)) == NULL) {
     return 1;
   }
+  syslog(LOG_INFO, "Network console listening on port %d", port);
 
   // Add the network console to the event manager
   event_mgr_add(&event_mgr, netcon->fd, netcon_process, netcon);
@@ -66,6 +129,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  syslog(LOG_INFO, "Starting event loop");
+
   // Run the event manager
   while (event_mgr_process(&event_mgr) != -1);
 
@@ -74,6 +139,9 @@ int main(int argc, char *argv[]) {
 
   // Cleanup the GPIOs
   gpio_mgr_release();
+
+  // Close syslog
+  closelog();
 
   return 0;
 }
