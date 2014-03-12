@@ -1,6 +1,14 @@
-<?php include 'header.inc.php'; ?>
+<?php
+include 'header.inc.php';
+include 'funcs.inc.php';
+?>
 
 <div id="alert-area">
+<?php
+if (isset($status)) {
+  showAlert($status, $message);
+}
+?>
 </div>
 
 <?php

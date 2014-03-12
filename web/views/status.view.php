@@ -1,15 +1,28 @@
 <?php
 
-$gpioHost = '192.168.0.140';
+$gpioHost = '127.0.0.1';
 $gpioPort = 6965;
 
 $app->get('/', $authMw, function () use($app, $gpioHost, $gpioPort) {
-  $gpioClient = new GpioClient($gpioHost, $gpioPort);
+  $gpioClient = null;
+  try {
+    $gpioClient = new GpioClient($gpioHost, $gpioPort);
+  } catch (Exception $e) {
+    $app->render('status.php', array(
+      'site'        => 'Garage',
+      'title'       => 'Status',
+      'garageDoors' => array(),
+      'status'      => 'error',
+      'message'     => 'Failed to connect to gpiod: ' . $e->getMessage()
+    ));
+    return;
+  }
+
   $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
 
   $app->render('status.php', array(
-    'site'    => 'Garage',
-    'title'   => 'Status',
+    'site'        => 'Garage',
+    'title'       => 'Status',
     'garageDoors' => $garageDoors,
   ));
 });
