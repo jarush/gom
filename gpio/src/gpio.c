@@ -31,6 +31,8 @@ gpio_t* gpio_alloc(int pin) {
   gpio->fd = -1;
   gpio->active_low = 0;
   gpio->previous_value = -1;
+  gpio->previous_time.tv_sec = 0;
+  gpio->previous_time.tv_nsec = 0;
   gpio->action = NULL;
 
   // Initialize the BCM2835 library
@@ -172,11 +174,8 @@ int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
   // Check if the GPIO value has been high long enough to trigger the action
   if (value != gpio->previous_value) {
     // Compute how long the GPIO has been high
-    double delta_seconds = -1;
-    if (gpio->previous_value != -1) {
-      timespec_sub(&current_time, &gpio->previous_time, &delta_time);
-      delta_seconds = timespec_seconds(&delta_time);
-    }
+    timespec_sub(&current_time, &gpio->previous_time, &delta_time);
+    double delta_seconds = timespec_seconds(&delta_time);
 
     // Trigger the action if the trigger time has ellapsed
     if (delta_seconds < 0 || delta_seconds > gpio->trigger_time) {
