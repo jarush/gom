@@ -7,11 +7,6 @@
     <!-- Stylesheets -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
 
     <!-- javascript libraries -->
     <script src="/js/jquery-1.11.0.min.js"></script>
@@ -23,10 +18,10 @@
 
   <body>
     <!-- Navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -48,7 +43,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
     <!-- Main Container -->
     <div class="container">
