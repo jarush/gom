@@ -59,10 +59,12 @@ int netcon_client_process(event_mgr_t *event_mgr, int fd, void *data) {
   n = read(fd, netcon_client->buffer + netcon_client->nbytes, n);
   if (n == 0) {
     // The connection is closed
+    netcon_client_release(netcon_client);
     return -1;
   } else if (n == -1) {
     // An error occured
     perror("read");
+    netcon_client_release(netcon_client);
     return -1;
   }
 
