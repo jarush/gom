@@ -92,6 +92,13 @@ static int action_boxcar_callback(void *action_ptr, int value) {
     return -1;
   }
 
+  // Enable verbose output
+  curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+  // Disable SSL peer/host verification
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
   // Set the URL
   curl_easy_setopt(curl, CURLOPT_URL, URL);
 
