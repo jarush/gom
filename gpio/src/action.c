@@ -3,7 +3,7 @@
  */
 #include "action.h"
 #include "action_print.h"
-#include "action_tweet.h"
+#include "action_boxcar.h"
 #include "action_email.h"
 
 #include <stdio.h>
@@ -22,8 +22,8 @@ action_t* action_alloc(config_t *config, const char *prefix) {
   // Parse the action
   if (strcmp(type, "print") == 0) {
     action = (action_t*)action_print_alloc(config, prefix);
-  } else if (strcmp(type, "tweet") == 0) {
-    action = (action_t*)action_tweet_alloc(config, prefix);
+  } else if (strcmp(type, "boxcar") == 0) {
+    action = (action_t*)action_boxcar_alloc(config, prefix);
   } else if (strcmp(type, "email") == 0) {
     action = (action_t*)action_email_alloc(config, prefix);
   } else {
