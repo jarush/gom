@@ -13,7 +13,8 @@ typedef struct {
   char to[256];
   char username[128];
   char password[128];
-  char message[256];
+  char subject[256];
+  char message[512];
 } action_email_t;
 
 action_email_t* action_email_alloc(config_t *config, const char *prefix);

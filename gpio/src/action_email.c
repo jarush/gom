@@ -15,7 +15,6 @@ typedef struct {
 } email_msg_t;
 
 static int action_email_callback(void *action_ptr, int value);
-static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
 static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userdata);
 
 action_email_t* action_email_alloc(config_t *config, const char *prefix) {
@@ -82,6 +81,16 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   }
   strncpy(action->password, password, sizeof(action->password));
 
+  // Get the subject
+  snprintf(str, sizeof(str), "%s.subject", prefix);
+  const char *subject = config_get_string(config, str, NULL);
+  if (subject == NULL) {
+    fprintf(stderr, "Missing required parameter %s\n", str);
+    action_release((action_t*)action);
+    return NULL;
+  }
+  strncpy(action->subject, subject, sizeof(action->subject));
+
   // Get the message
   snprintf(str, sizeof(str), "%s.message", prefix);
   const char *message = config_get_string(config, str, NULL);
@@ -118,7 +127,6 @@ static int action_email_callback(void *action_ptr, int value) {
   }
 
   // Set a function to handle the response
-//  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
   curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
   // Set the URL
@@ -141,14 +149,16 @@ static int action_email_callback(void *action_ptr, int value) {
   curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
 
   // Create the email message
+
   email_msg_t email_msg;
   email_msg.msg_len = snprintf(email_msg.message, sizeof(email_msg.message),
-      "Subject: %s\n\n%s", "This is the subject", "This is the body");
+      "Subject: %s\r\n\r\n%s", action->subject, action->message);
   email_msg.msg_ptr = email_msg.message;
 
   // Set the function to send the email body
   curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
   curl_easy_setopt(curl, CURLOPT_READDATA, &email_msg);
+  curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
   // Perform the request
   res = curl_easy_perform(curl);
@@ -165,14 +175,14 @@ static int action_email_callback(void *action_ptr, int value) {
   return 0;
 }
 
-size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
-  return size * nmemb;
-}
-
 static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userdata) {
   email_msg_t *email_msg = (email_msg_t*)userdata;
 
   size_t n = size * nmemb;
+  if (n < 1) {
+    return 0;
+  }
+
   if (n > email_msg->msg_len) {
     n = email_msg->msg_len;
   }
