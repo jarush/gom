@@ -1,6 +1,7 @@
 <?php
 include 'header.inc.php';
 include 'settings-tabs.inc.php';
+include 'funcs.inc.php';
 
 // Get the network configuration
 $c = new Config('network.properties');
@@ -34,16 +35,13 @@ if (!$eth) {
 }
 ?>
 
-<?php
-if (isset($status)) {
-  echo '<div class="alert alert-success">';
-  echo '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-  echo $status;
-  echo '</div>';
-}
-?>
-
 <div class="tab-body">
+  <?php
+    if (isset($status)) {
+      showAlert($status, $message);
+    }
+  ?>
+
   <form class="form-horizontal" method="post">
     <fieldset>
       <legend>Wireless Interface</legend>

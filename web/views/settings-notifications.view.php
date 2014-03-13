@@ -8,81 +8,98 @@ $app->get('/settings/notifications', $authMw, function () use($app) {
   ));
 });
 
-$app->post('/settings/notifications/boxcar_subscribe', $authMw, function() use($app) {
+$app->get('/test', function () use($app) {
+  phpinfo();
+});
+
+$app->post('/settings/notifications', $authMw, function() use($app) {
+  $config = new Config('notifications.properties');
   $req = $app->request();
 
-  $email = $req->post('email');
-  if (!isset($email)) {
-    echo json_encode(array(
+  $boxcarAccessToken = $req->post('boxcar_access_token');
+  if (isset($boxcarAccessToken)) {
+    $config->set('boxcar_access_token', $boxcarAccessToken);
+  }
+
+  $boxcarSound = $req->post('boxcar_sound');
+  if (isset($boxcarSound)) {
+    $config->set('boxcar_sound', $boxcarSound);
+  }
+
+  if ($config->save('notifications.properties') === FALSE) {
+    $app->render('settings-notifications.php', array(
+      'site'    => 'Garage',
+      'title'   => 'Settings',
+      'tab'     => 'Notifications',
       'status'  => 'error',
-      'message' => 'Missing required email parameter',
+      'message' => 'Failed to save settings',
     ));
-    $app->response()->status(500);
     return;
   }
 
-  $config = new Config('boxcar.properties');
-  $url = 'http://boxcar.io/devices/providers/'
-    . $config->get('providerKey', null)
-    . '/notifications/subscribe';
-
-  $postFields = http_build_query(array(
-    'email' => $email,
-  ));
-
-  $ch = curl_init($url);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
-  $response = curl_exec($ch);
-  $info = curl_getinfo($ch);
-  curl_close($ch);
-
-  echo json_encode(array(
-    'status'   => 'ok',
-    'info'     => $info,
+  $app->render('settings-notifications.php', array(
+    'site'    => 'Garage',
+    'title'   => 'Settings',
+    'tab'     => 'Notifications',
+    'status'  => 'success',
+    'message' => 'Settings saved successfully',
   ));
 });
 
 $app->post('/settings/notifications/boxcar_test', $authMw, function() use($app) {
   $req = $app->request();
 
-  $email = $req->post('email');
-  if (!isset($email)) {
+  $accessToken = $req->post('access_token');
+  $sound = $req->post('sound');
+  if (!isset($accessToken) || !isset($sound)) {
     echo json_encode(array(
       'status'  => 'error',
-      'message' => 'Missing required email parameter',
+      'message' => 'Missing required parameter(s)',
     ));
     $app->response()->status(500);
     return;
   }
 
-  $config = new Config('boxcar.properties');
-  $url = 'http://boxcar.io/devices/providers/'
-    . $config->get('providerKey', null)
-    . '/notifications';
+  $url = 'https://new.boxcar.io/api/notifications';
 
   $postFields = http_build_query(array(
-    'email'                          => $email,
-    'notification[from_screen_name]' => 'Test',
-    'notification[message]'          => 'This is a test',
+    'user_credentials'           => $accessToken,
+    'notification[title]'        => 'Test',
+    'notification[long_message]' => 'This is a test',
+    'notification[sound]'        => $sound,
   ));
 
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_POST, TRUE);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
+
   $response = curl_exec($ch);
-  $info = curl_getinfo($ch);
+  $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
 
+  if ($statusCode < 200 || $statusCode > 299) {
+    $obj = json_decode($response);
+
+    $message = null;
+    if (isset($obj->Response)) {
+      $message = 'Boxcar replied - ' . $obj->Response;
+    } else {
+      $message = 'Failed to send message to Boxcar';
+    }
+
+    echo json_encode(array(
+      'status'  => 'error',
+      'message' => $message,
+    ));
+    $app->response()->status(500);
+    return;
+  }
+
   echo json_encode(array(
-    'status'   => 'ok',
-    'info'     => $info,
+    'status'  => 'success',
+    'message' => 'Test message sent',
   ));
 });
-
 
 ?>

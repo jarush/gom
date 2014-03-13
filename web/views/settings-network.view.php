@@ -79,19 +79,21 @@ $app->post('/settings/network', $authMw, function () use($app) {
 
   if ($config->save('network.properties') === FALSE) {
     $app->render('settings-network.php', array(
-      'site'   => 'Garage',
-      'title'  => 'Settings',
-      'tab'    => 'Network',
-      'status' => 'Failed to save settings',
+      'site'    => 'Garage',
+      'title'   => 'Settings',
+      'tab'     => 'Network',
+      'status'  => 'error',
+      'message' => 'Failed to save settings',
     ));
     return;
   }
 
   $app->render('settings-network.php', array(
-    'site'   => 'Garage',
-    'title'  => 'Settings',
-    'tab'    => 'Network',
-    'status' => 'Settings saved successfully',
+    'site'    => 'Garage',
+    'title'   => 'Settings',
+    'tab'     => 'Network',
+    'status'  => 'success',
+    'message' => 'Settings saved successfully',
   ));
 });
 

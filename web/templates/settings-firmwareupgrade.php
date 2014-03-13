@@ -1,6 +1,6 @@
 <?php
 include 'header.inc.php';
-include 'settings-tabs.inc.php'
+include 'settings-tabs.inc.php';
 ?>
 
 <div class="tab-body">
