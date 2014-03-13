@@ -31,7 +31,7 @@ for ($i = 0; $i < $n; $i++) {
   <div class="panel-heading">
     <h3 class="panel-title">
       Door: <?php echo $name; ?>
-      <span class="pull-right <?php echo $statusClass; ?>"><?php echo $status; ?></span>
+      <strong id="status" class="pull-right <?php echo $statusClass; ?>"><?php echo $status; ?></strong>
     </h3>
   </div>
 
@@ -122,18 +122,32 @@ for ($i = 0; $i < $n; $i++) {
       .success(function(data, textStatus, xhr) {
         console.log(data);
 
-        var p = div.children('p');
-        p.text('Status: ' + data.doorStatus);
+        var status = div.find('#status');
+        status.text(data.doorStatus);
 
-        var btn = div.children('button');
+        var btn = div.find('button');
         btn.attr('status', data.doorStatus);
+
         if (data.doorStatus == 'Closed') {
+          div.removeClass('panel-danger');
+          div.addClass('panel-default');
+
+          status.removeClass('text-danger');
+          status.addClass('text-success');
+
           btn.text('Open');
           btn.removeClass('btn-danger');
         } else {
+          div.removeClass('panel-default');
+          div.addClass('panel-danger');
+
+          status.removeClass('text-success');
+          status.addClass('text-danger');
+
           btn.text('Close');
           btn.addClass('btn-danger');
         }
+
         btn.removeClass('disabled');
       })
     });
