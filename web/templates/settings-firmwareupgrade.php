@@ -3,44 +3,50 @@ include 'header.inc.php';
 include 'settings-tabs.inc.php'
 ?>
 
-<legend>Firmware Upgrade</legend>
-<form id="form" class="form-horizontal" enctype="multipart/form-data" method="post">
-  <div class="control-group">
-    <label class="control-label" for="pretty-file">Boxcar Email</label>
-    <div class="controls">
+<div class="tab-body">
+  <legend>Firmware Upgrade</legend>
+  <form id="form" class="form-horizontal" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="pretty-file">Firmware File</label>
       <input id="file" type="file" name="file" class="hide"/>
-      <div class="input-append">
-        <input id="pretty-file" class="input-large" type="text" onclick="$('#file').click();">
-        <a class="btn" onclick="$('#file').click();">Browse</a>
+      <div class="col-sm-10">
+        <div class="input-group">
+          <input type="text" class="form-control" id="pretty-file"
+                 onclick="$('#file').click();">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default"
+                    onclick="$('#file').click(); return false;">Browse</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <input id="upgrade" class="btn btn-primary" type="button" value="Upgrade" disabled='disabled'/>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input type="button" class="btn btn-primary" id="upgrade" value="Upgrade" disabled="disabled"/>
+      </div>
+    </div>
+  </form>
+
+  <div id="upgradeModal" class="modal hide fade">
+    <div class="modal-header">
+      <h3>Firmware Upgrade</h3>
+    </div>
+
+    <div class="modal-body">
+      <h4 id="upgradeStatus">Uploading Firmware...</h4>
+      <div id="progress" class="progress progress-striped active">
+        <div id="bar" class="bar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <a id="upgradeClose" href="#" class="btn disabled">Close</a>
+      <a id="upgradeReboot" href="#" class="btn btn-primary disabled">Reboot</a>
     </div>
   </div>
-</form>
 
-<div id="upgradeModal" class="modal hide fade">
-  <div class="modal-header">
-    <h3>Firmware Upgrade</h3>
-  </div>
-
-  <div class="modal-body">
-    <h4 id="upgradeStatus">Uploading Firmware...</h4>
-    <div id="progress" class="progress progress-striped active">
-      <div id="bar" class="bar" style="width: 0%;"></div>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <a id="upgradeClose" href="#" class="btn disabled">Close</a>
-    <a id="upgradeReboot" href="#" class="btn btn-primary disabled">Reboot</a>
-  </div>
+  <legend>Factory Defaults</legend>
 </div>
-
-<legend>Factory Defaults</legend>
 
 <script>
 $('#file').change(function() {

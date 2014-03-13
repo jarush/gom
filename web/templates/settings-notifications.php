@@ -3,22 +3,38 @@ include 'header.inc.php';
 include 'settings-tabs.inc.php'
 ?>
 
-<legend>Twitter</legend>
-<legend>Boxcar</legend>
-<form class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label" for="boxcar_email">Boxcar Email</label>
-    <div class="controls">
-      <input id="boxcar_email" type="email" placeholder="Email Address" required></input>
+<div class="tab-body">
+  <form class="form-horizontal">
+    <fieldset>
+      <legend>Twitter</legend>
+    </fieldset>
+
+    <fieldset>
+      <legend>Boxcar</legend>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="boxcar_email">Boxcar Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" name="boxcar_email" id="boxcar_email"
+                 placeholder="Email Address" required="required"></input>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="button" id="boxcar_subscribe" class="btn btn-primary">Subscribe</button>
+          <button type="button" id="boxcar_test" class="btn">Test</button>
+        </div>
+      </div>
+    <fieldset>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="reset" class="btn">Reset</button>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <button id="boxcar_subscribe" type="button" class="btn btn-primary">Subscribe</button>
-      <button id="boxcar_test" type="button" class="btn">Test</button>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
 
 <script type="text/javascript">
   $('#boxcar_test').click(function() {

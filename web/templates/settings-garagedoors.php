@@ -16,21 +16,22 @@ if (isset($status)) {
 }
 ?>
 
-<form id="form" method="post">
-  <p>
-    <input type="button" class="btn" id="add_door" value="Add Door" />
-  </p>
+<div class="tab-body">
+  <form id="form" method="post">
+    <p>
+      <input type="button" class="btn btn-default" id="add_door" value="Add Door" />
+    </p>
 
-  <table class="table table-striped table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Sensor GPIO</th>
-        <th>Relay GPIO</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Sensor GPIO</th>
+          <th>Relay GPIO</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
 <?php
 
 $numGarageDoors = 0;
@@ -38,34 +39,35 @@ foreach ($garageDoors as $gd) {
   $numGarageDoors++;
 
 ?>
-      <tr>
-        <td>
-          <input type="text" name="name[]" value="<?php echo $gd->getName(); ?>"
-                 required="required" />
-        </td>
-        <td>
-          <input type="text" name="sensorGpio[]" class="input-mini" value="<?php echo $gd->getSensorGpio(); ?>"
-                 required="required" pattern="\d+" />
-        </td>
-        <td>
-          <input type="text" name="relayGpio[]" class="input-mini" value="<?php echo $gd->getRelayGpio(); ?>"
-                 required="required" pattern="\d+" />
-        </td>
-        <td class="text-center">
-          <input type="button" class="btn" name="remove" value="Remove" />
-        </td>
-      </tr>
+        <tr>
+          <td>
+            <input type="text" name="name[]" value="<?php echo $gd->getName(); ?>"
+                   required="required" />
+          </td>
+          <td>
+            <input type="text" name="sensorGpio[]" class="input-mini" value="<?php echo $gd->getSensorGpio(); ?>"
+                   required="required" pattern="\d+" />
+          </td>
+          <td>
+            <input type="text" name="relayGpio[]" class="input-mini" value="<?php echo $gd->getRelayGpio(); ?>"
+                   required="required" pattern="\d+" />
+          </td>
+          <td class="text-center">
+            <input type="button" class="btn" name="remove" value="Remove" />
+          </td>
+        </tr>
 <?php
 }
 ?>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="reset" class="btn">Reset</button>
-  </div>
-</form>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="reset" class="btn">Reset</button>
+    </div>
+  </form>
+</div>
 
 <script type="text/javascript">
   numGarageDoors = <?php echo $numGarageDoors; ?>;
