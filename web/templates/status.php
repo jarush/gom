@@ -16,24 +16,32 @@ $n = count($garageDoors);
 for ($i = 0; $i < $n; $i++) {
   $name = $garageDoors[$i]->getName();
   $status = $garageDoors[$i]->getStatus();
+  $panelClass = 'panel-default';
+  $statusClass = 'text-success';
   $buttonClass = '';
   if ($status == 'Open') {
+    $panelClass = 'panel-danger';
+    $statusClass = 'text-danger';
     $buttonClass = 'btn-danger';
   }
 ?>
 
-<div class="well door" door="<?php echo $i; ?>">
-  <h3>Door: <?php echo $name; ?></h3>
+<div class="panel <?php echo $panelClass; ?>"
+     door="<?php echo $i; ?>">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      Door: <?php echo $name; ?>
+      <span class="pull-right <?php echo $statusClass; ?>"><?php echo $status; ?></span>
+    </h3>
+  </div>
 
-  <p class="lead" door="<?php echo $i; ?>">
-    Status: <?php echo $status; ?>
-  </p>
-
-  <button class="btn btn-large btn-primary <?php echo $buttonClass; ?>"
-          door="<?php echo $i; ?>"
-          status="<?php echo $status; ?>">
-    <?php echo $status == "Open" ? "Close" : "Open"; ?>
-  </button>
+  <div class="panel-body">
+    <button class="btn btn-large btn-primary btn-block <?php echo $buttonClass; ?>"
+            door="<?php echo $i; ?>"
+            status="<?php echo $status; ?>">
+      <?php echo $status == "Open" ? "Close" : "Open"; ?>
+    </button>
+  </div>
 </div>
 
 <?php
