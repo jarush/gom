@@ -18,10 +18,6 @@ if (isset($status)) {
 
 <div class="tab-body">
   <form id="form" method="post">
-    <p>
-      <input type="button" class="btn btn-default" id="add_door" value="Add Door" />
-    </p>
-
     <div class="panel panel-default">
       <table class="table table-striped">
         <thead>
@@ -29,7 +25,9 @@ if (isset($status)) {
             <th>Name</th>
             <th>Sensor GPIO</th>
             <th>Relay GPIO</th>
-            <th></th>
+            <th class="text-center">
+              <button type="button" class="btn btn-default" id="add_door">Add Door</button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +65,7 @@ foreach ($garageDoors as $gd) {
       </table>
     </div>
 
-    <div class="form-group">
+    <div class="form-actions">
       <button type="submit" class="btn btn-primary">Save</button>
       <button type="reset" class="btn">Reset</button>
     </div>

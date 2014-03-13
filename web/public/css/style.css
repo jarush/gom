@@ -6,3 +6,9 @@
   padding-top: 19px;
 }
 
+.form-actions {
+  margin-bottom: 15px;
+  padding: 19px;
+  border-top: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
