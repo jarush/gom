@@ -47,7 +47,7 @@ for ($i = 0; $i < $n; $i++) {
     html += '<div id="alert" class="alert ' + alertClass + ' alert-dismissable">';
     html += '  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
     if (title) {
-      html += '  <strong>' + title + '</strong>';
+      html += '<strong>' + title + ':</strong> ';
     }
     html += message;
     html += '</div>';
