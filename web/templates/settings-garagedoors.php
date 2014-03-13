@@ -41,19 +41,22 @@ foreach ($garageDoors as $gd) {
 ?>
         <tr>
           <td>
-            <input type="text" name="name[]" value="<?php echo $gd->getName(); ?>"
+            <input type="text" name="name[]" class="form-control"
+                   value="<?php echo $gd->getName(); ?>"
                    required="required" />
           </td>
           <td>
-            <input type="text" name="sensorGpio[]" class="input-mini" value="<?php echo $gd->getSensorGpio(); ?>"
+            <input type="text" name="sensorGpio[]" class="form-control"
+                   value="<?php echo $gd->getSensorGpio(); ?>"
                    required="required" pattern="\d+" />
           </td>
           <td>
-            <input type="text" name="relayGpio[]" class="input-mini" value="<?php echo $gd->getRelayGpio(); ?>"
+            <input type="text" name="relayGpio[]" class="form-control"
+                   value="<?php echo $gd->getRelayGpio(); ?>"
                    required="required" pattern="\d+" />
           </td>
           <td class="text-center">
-            <input type="button" class="btn" name="remove" value="Remove" />
+            <input type="button" class="btn btn-danger" name="remove" value="Remove" />
           </td>
         </tr>
 <?php
@@ -85,6 +88,7 @@ foreach ($garageDoors as $gd) {
           $('<input>').attr({
             'type'     : 'text',
             'name'     : 'name[]',
+            'class'    : 'form-control',
             'required' : 'required',
           })
         ),
@@ -92,7 +96,7 @@ foreach ($garageDoors as $gd) {
           $('<input>').attr({
             'type'     : 'text',
             'name'     : 'sensorGpio[]',
-            'class'    : 'input-mini',
+            'class'    : 'form-control',
             'required' : 'required',
             'pattern'  : '\\d+',
           })
@@ -101,15 +105,17 @@ foreach ($garageDoors as $gd) {
           $('<input>').attr({
             'type'     : 'text',
             'name'     : 'relayGpio[]',
-            'class'    : 'input-mini',
+            'class'    : 'form-control',
             'required' : 'required',
             'pattern'  : '\\d+',
           })
         ),
-        $('<td>').append(
+        $('<td>').attr({
+          'class' : 'text-center'
+        }).append(
           $('<input>').attr({
             'type'  : 'button',
-            'class' : 'btn',
+            'class' : 'btn btn-danger',
             'name'  : 'remove',
             'value' : 'Remove'
           }).click(function() {
