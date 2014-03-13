@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #include "command_process.h"
 
@@ -16,7 +17,7 @@ netcon_client_t* netcon_client_alloc(int fd) {
   // Allocate the structure
   netcon_client = (netcon_client_t*)malloc(sizeof(netcon_client_t));
   if (netcon_client == NULL) {
-    fprintf(stderr, "Failed to allocate structure\n");
+    syslog(LOG_ERR, "Failed to allocate structure");
     return NULL;
   }
 
@@ -39,7 +40,7 @@ int netcon_client_send(netcon_client_t *netcon_client, const char *response) {
   int len = strlen(response);
 
   if (write(netcon_client->fd, response, len) != len) {
-    perror("write");
+    syslog(LOG_ERR, "Error writting to socket: %m");
     return -1;
   }
 
@@ -63,7 +64,7 @@ int netcon_client_process(event_mgr_t *event_mgr, int fd, void *data) {
     return -1;
   } else if (n == -1) {
     // An error occured
-    perror("read");
+    syslog(LOG_ERR, "Error reading from socket: %m");
     netcon_client_release(netcon_client);
     return -1;
   }

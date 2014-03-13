@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 #include <curl/curl.h>
 
 typedef struct {
@@ -24,7 +25,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   // Allocate the structure
   action = (action_email_t*)malloc(sizeof(action_email_t));
   if (action == NULL) {
-    fprintf(stderr, "Failed to allocate structure\n");
+    syslog(LOG_ERR, "Failed to allocate structure");
     return NULL;
   }
 
@@ -35,7 +36,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.url", prefix);
   const char *url = config_get_string(config, str, NULL);
   if (url == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -45,7 +46,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.from", prefix);
   const char *from = config_get_string(config, str, NULL);
   if (from == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -55,7 +56,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.to", prefix);
   const char *to = config_get_string(config, str, NULL);
   if (to == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -65,7 +66,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.username", prefix);
   const char *username = config_get_string(config, str, NULL);
   if (username == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -75,7 +76,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.password", prefix);
   const char *password = config_get_string(config, str, NULL);
   if (password == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -85,7 +86,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.subject", prefix);
   const char *subject = config_get_string(config, str, NULL);
   if (subject == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -95,7 +96,7 @@ action_email_t* action_email_alloc(config_t *config, const char *prefix) {
   snprintf(str, sizeof(str), "%s.message", prefix);
   const char *message = config_get_string(config, str, NULL);
   if (message == NULL) {
-    fprintf(stderr, "Missing required parameter %s\n", str);
+    syslog(LOG_ERR, "Missing required parameter %s", str);
     action_release((action_t*)action);
     return NULL;
   }
@@ -114,7 +115,7 @@ static int action_email_callback(void *action_ptr, int value) {
     return 0;
   }
 
-  printf("Emailing\n");
+  syslog(LOG_INFO, "Emailing");
 
   // Initialize cURL
   curl_global_init(CURL_GLOBAL_ALL);
@@ -122,7 +123,7 @@ static int action_email_callback(void *action_ptr, int value) {
   // Create a cURL easy session
   curl = curl_easy_init();
   if (curl == NULL) {
-    fprintf(stderr, "Failed to create cURL session\n");
+    syslog(LOG_ERR, "Failed to create cURL session");
     return -1;
   }
 
@@ -163,7 +164,7 @@ static int action_email_callback(void *action_ptr, int value) {
   // Perform the request
   res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
-    fprintf(stderr, "Failed to send email: %s\n", curl_easy_strerror(res));
+    syslog(LOG_ERR, "Failed to send email: %s", curl_easy_strerror(res));
     return -1;
   }
 

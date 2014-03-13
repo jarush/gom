@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <unistd.h>
+#include <syslog.h>
 
 void event_mgr_init(event_mgr_t *event_mgr) {
   // Initialize the event handler list
@@ -92,7 +93,7 @@ int event_mgr_process(event_mgr_t *event_mgr) {
     if (errno == EINTR) {
       return 0;
     } else {
-      perror("select");
+      syslog(LOG_ERR, "Error performing select: %m");
       return -1;
     }
   }

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -20,7 +21,7 @@ netcon_t* netcon_alloc(unsigned short port) {
   // Allocate the structure
   netcon = (netcon_t*)malloc(sizeof(netcon_t));
   if (netcon == NULL) {
-    fprintf(stderr, "Failed to allocate structure\n");
+    syslog(LOG_ERR, "Failed to allocate structure");
     return NULL;
   }
 
@@ -29,7 +30,7 @@ netcon_t* netcon_alloc(unsigned short port) {
 
   // Create the socket
   if ((netcon->fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-    perror("socket");
+    syslog(LOG_ERR, "Error creating socket: %m");
     netcon_release(netcon);
     return NULL;
   }
@@ -38,7 +39,7 @@ netcon_t* netcon_alloc(unsigned short port) {
   tmp = 1;
   if (setsockopt(netcon->fd, SOL_SOCKET, SO_REUSEADDR,
       &tmp, sizeof(tmp)) == -1) {
-    perror("setsockopt");
+    syslog(LOG_ERR, "Error setting SO_REUSEADDR: %m");
     netcon_release(netcon);
     return NULL;
   }
@@ -50,14 +51,14 @@ netcon_t* netcon_alloc(unsigned short port) {
 
   // Bind the socket to the address
   if (bind(netcon->fd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
-    perror("bind");
+    syslog(LOG_ERR, "Error binding socket: %m");
     netcon_release(netcon);
     return NULL;
   }
 
   // Start listening for new connections
   if (listen(netcon->fd, 5) == -1) {
-    perror("listen");
+    syslog(LOG_ERR, "Error starting to listen on socket: %m");
     netcon_release(netcon);
     return NULL;
   }
@@ -85,15 +86,15 @@ int netcon_process(event_mgr_t *event_mgr, int fd, void *data) {
 
   // Accept the connection
   if ((sd = accept(fd, (struct sockaddr *)&addr, &addr_len)) == -1) {
-    perror("accept");
+    syslog(LOG_ERR, "Error accepting client connection: %m");
     return -1;
   }
 
-  printf("Connection from %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+  syslog(LOG_INFO, "Connection from %s:%d", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   // Allocate a new network console client
   if ((netcon_client = netcon_client_alloc(sd)) == NULL) {
-    fprintf(stderr, "Failed to allocate new client connection\n");
+    syslog(LOG_ERR, "Failed to allocate new client connection");
     return 0;
   }
 

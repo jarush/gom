@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 
 action_t* action_alloc(config_t *config, const char *prefix) {
   action_t *action;
@@ -26,7 +27,7 @@ action_t* action_alloc(config_t *config, const char *prefix) {
   } else if (strcmp(type, "email") == 0) {
     action = (action_t*)action_email_alloc(config, prefix);
   } else {
-    fprintf(stderr, "Invalid action type: %s\n", type);
+    syslog(LOG_ERR, "Invalid action type: %s", type);
     return NULL;
   }
 

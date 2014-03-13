@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 
 #include "str_utils.h"
 #include "gpio_mgr.h"
@@ -22,7 +23,7 @@ int command_process(netcon_client_t *netcon_client, const char *command) {
   char str[1024];
   int num_tokens;
 
-  printf("Command: %s\n", command);
+  syslog(LOG_DEBUG, "Command: %s", command);
 
   // Make a copy of the command since we modify it
   strncpy(str, command, sizeof(str));
@@ -41,7 +42,7 @@ int command_process(netcon_client_t *netcon_client, const char *command) {
   } else if (strcmp(tokens[0], "exit") == 0) {
     command_exit(netcon_client, tokens, num_tokens);
   } else {
-    fprintf(stderr, "Invalid command: %s\n", command);
+    syslog(LOG_WARNING, "Invalid command: %s", command);
   }
 
   return 0;
@@ -51,7 +52,7 @@ void command_get(netcon_client_t *netcon_client, char *tokens[], int num_tokens)
   char str[1024];
 
   if (num_tokens != 2) {
-    fprintf(stderr, "Invalid number of parameters\n");
+    syslog(LOG_WARNING, "Invalid number of parameters");
     netcon_client_send(netcon_client, "ERROR Invalid number of parameters\n");
     return;
   }
@@ -61,7 +62,7 @@ void command_get(netcon_client_t *netcon_client, char *tokens[], int num_tokens)
   // Get the gpio
   gpio_t *gpio = gpio_mgr_get(idx);
   if (gpio == NULL) {
-    fprintf(stderr, "No such gpio: %d\n", idx);
+    syslog(LOG_WARNING, "No such gpio: %d", idx);
     netcon_client_send(netcon_client, "ERROR No such GPIO\n");
     return;
   }
@@ -75,7 +76,7 @@ void command_get(netcon_client_t *netcon_client, char *tokens[], int num_tokens)
 
 void command_set(netcon_client_t *netcon_client, char *tokens[], int num_tokens) {
   if (num_tokens != 3) {
-    fprintf(stderr, "Invalid number of parameters\n");
+    syslog(LOG_WARNING, "Invalid number of parameters");
     netcon_client_send(netcon_client, "ERROR Invalid number of parameters\n");
     return;
   }
@@ -86,7 +87,7 @@ void command_set(netcon_client_t *netcon_client, char *tokens[], int num_tokens)
   // Get the gpio
   gpio_t *gpio = gpio_mgr_get(idx);
   if (gpio == NULL) {
-    fprintf(stderr, "No such gpio: %d\n", idx);
+    syslog(LOG_WARNING, "No such gpio: %d", idx);
     netcon_client_send(netcon_client, "ERROR No such GPIO\n");
     return;
   }
@@ -103,7 +104,7 @@ void command_set(netcon_client_t *netcon_client, char *tokens[], int num_tokens)
 
 void command_toggle(netcon_client_t *netcon_client, char *tokens[], int num_tokens) {
   if (num_tokens != 4) {
-    fprintf(stderr, "Invalid number of parameters\n");
+    syslog(LOG_WARNING, "Invalid number of parameters");
     netcon_client_send(netcon_client, "ERROR Invalid number of parameters\n");
     return;
   }
@@ -115,7 +116,7 @@ void command_toggle(netcon_client_t *netcon_client, char *tokens[], int num_toke
   // Get the gpio
   gpio_t *gpio = gpio_mgr_get(idx);
   if (gpio == NULL) {
-    fprintf(stderr, "No such gpio: %d\n", idx);
+    syslog(LOG_WARNING, "No such gpio: %d", idx);
     netcon_client_send(netcon_client, "ERROR No such GPIO\n");
     return;
   }
@@ -133,7 +134,7 @@ void command_toggle(netcon_client_t *netcon_client, char *tokens[], int num_toke
 void command_exit(netcon_client_t *netcon_client, char *tokens[], int num_tokens) {
   netcon_client_send(netcon_client, "OK\n");
 
-  fprintf(stderr, "Performing remote exit\n");
+  syslog(LOG_INFO, "Performing remote exit");
 
   exit(0);
 }

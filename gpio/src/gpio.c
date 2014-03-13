@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 #include <sys/timerfd.h>
 #include <bcm2835.h>
 
@@ -22,7 +23,7 @@ gpio_t* gpio_alloc(int pin) {
   // Allocate the structure
   gpio = (gpio_t*)malloc(sizeof(gpio_t));
   if (gpio == NULL) {
-    fprintf(stderr, "Failed to allocate structure\n");
+    syslog(LOG_ERR, "Failed to allocate structure");
     return NULL;
   }
 
@@ -38,7 +39,7 @@ gpio_t* gpio_alloc(int pin) {
   // Initialize the BCM2835 library
   if (!initialized) {
     if (!bcm2835_init()) {
-      fprintf(stderr, "Failed to initialize the BCM2835 library\n");
+      syslog(LOG_ERR, "Failed to initialize the BCM2835 library");
       gpio_release(gpio);
       return NULL;
     }
@@ -67,7 +68,7 @@ int gpio_set_input(gpio_t *gpio, int sec, int nsec,
   // Create the timer fd
   gpio->fd = timerfd_create(CLOCK_MONOTONIC, 0);
   if (gpio->fd == -1) {
-    perror("timerfd_create");
+    syslog(LOG_ERR, "Error creating timer: %m");
     gpio_release(gpio);
     return -1;
   }
@@ -80,7 +81,7 @@ int gpio_set_input(gpio_t *gpio, int sec, int nsec,
 
   // Set the timer
   if (timerfd_settime(gpio->fd, 0, &new_value, NULL) == -1) {
-    perror("timerfd_settime");
+    syslog(LOG_ERR, "Error setting timer: %m");
     gpio_release(gpio);
     return -1;
   }
@@ -180,7 +181,7 @@ int gpio_process(event_mgr_t *event_mgr, int fd, void *data) {
     // Trigger the action if the trigger time has ellapsed
     if (delta_seconds < 0 || delta_seconds > gpio->trigger_time) {
       if (gpio->action->callback(gpio->action, value) == -1) {
-        fprintf(stderr, "Failed to invoke action callback\n");
+        syslog(LOG_ERR, "Failed to invoke action callback");
       }
 
       gpio->previous_value = value;

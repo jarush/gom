@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <syslog.h>
 
 static int action_print_callback(void *action_ptr, int value);
 
@@ -14,7 +15,7 @@ action_print_t* action_print_alloc(config_t *config, const char *prefix) {
   // Allocate the structure
   action = (action_print_t*)malloc(sizeof(action_print_t));
   if (action == NULL) {
-    fprintf(stderr, "Failed to allocate structure\n");
+    syslog(LOG_ERR, "Failed to allocate structure");
     return NULL;
   }
 
@@ -25,7 +26,7 @@ action_print_t* action_print_alloc(config_t *config, const char *prefix) {
 }
 
 static int action_print_callback(void *action_ptr, int value) {
-  printf("GPIO %d\n", value);
+  syslog(LOG_INFO, "GPIO Value %d", value);
 
   return 0;
 }

@@ -81,6 +81,11 @@ int main(int argc, char *argv[]) {
   // Parse the command line options
   parse_options(argv, argc, &options);
 
+  // Open syslog
+  int log_flags = options.log_stderr ? LOG_PERROR : 0;
+  openlog("gpiod", LOG_CONS | LOG_PID | LOG_NDELAY | log_flags, LOG_DAEMON);
+  syslog(LOG_INFO, "Program started");
+
   // Initialize and read the configuration file
   config_init(&config);
   if (config_read(&config, options.filename) == -1) {
@@ -91,15 +96,10 @@ int main(int argc, char *argv[]) {
   if (options.dont_fork == 0) {
     // Fork into the background
     if (daemon(0, 0) == -1) {
-      perror("daemon");
+      syslog(LOG_ERR, "Error forking daemon: %m");
       return 1;
     }
   }
-
-  // Open syslog
-  int log_flags = options.log_stderr ? LOG_PERROR : 0;
-  openlog("gpiod", LOG_CONS | LOG_PID | LOG_NDELAY | log_flags, LOG_DAEMON);
-  syslog(LOG_INFO, "Program started");
 
   // Initialize the event manager
   event_mgr_init(&event_mgr);

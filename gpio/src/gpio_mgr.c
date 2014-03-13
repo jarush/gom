@@ -1,10 +1,12 @@
 /*
  * Copyright (C) 2013, Jason Rush
  */
+#include "gpio_mgr.h"
+
 #include <stdio.h>
 #include <string.h>
+#include <syslog.h>
 
-#include "gpio_mgr.h"
 #include "action.h"
 
 static gpio_t *gpios[MAX_GPIO];
@@ -54,7 +56,7 @@ int gpio_mgr_load_config(config_t *config) {
       snprintf(str, sizeof(str), "gpio%d.interval.nsec", i);
       int nsec = config_get_int32(config, str, -1);
       if (sec < 0 || nsec < 0) {
-        fprintf(stderr, "Invalid interval (%ds %dns) for gpio%d\n", sec, nsec, i);
+        syslog(LOG_ERR, "Invalid interval (%ds %dns) for gpio%d", sec, nsec, i);
         gpio_release(gpios[i]);
         gpios[i] = NULL;
         return -1;
@@ -72,7 +74,7 @@ int gpio_mgr_load_config(config_t *config) {
       snprintf(str, sizeof(str), "gpio%d.action", i);
       action_t *action = action_alloc(config, str);
       if (action == NULL) {
-        fprintf(stderr, "Failed to create action\n");
+        syslog(LOG_ERR, "Failed to create action");
         gpio_release(gpios[i]);
         gpios[i] = NULL;
         return -1;
