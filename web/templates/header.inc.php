@@ -6,12 +6,10 @@
 
     <!-- Stylesheets -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-      .door {
-        padding: 0px 19px 19px;
       }
     </style>
 
