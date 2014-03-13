@@ -36,7 +36,7 @@ for ($i = 0; $i < $n; $i++) {
   </div>
 
   <div class="panel-body">
-    <button class="btn btn-large btn-primary btn-block <?php echo $buttonClass; ?>"
+    <button class="btn btn-lg btn-primary btn-block <?php echo $buttonClass; ?>"
             door="<?php echo $i; ?>"
             status="<?php echo $status; ?>">
       <?php echo $status == "Open" ? "Close" : "Open"; ?>
