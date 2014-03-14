@@ -1,16 +1,17 @@
 <?php
 
 $app->get('/settings/garagedoors', $authMw, function () use($app) {
+  $garageDoors = GarageDoor::LoadGarageDoors(null);
+
   $app->render('settings-garagedoors.php', array(
-    'site'  => 'Garage',
-    'title' => 'Settings',
-    'tab'   => 'Garage Doors',
+    'site'        => 'Garage',
+    'title'       => 'Settings',
+    'tab'         => 'Garage Doors',
   ));
 });
 
 $app->post('/settings/garagedoors', $authMw, function () use($app) {
-  $c1 = new Config();
-  $c2 = new Config();
+  $c = new Config('gomd.properties');
 
   $req = $app->request();
   $name = $req->post('name');
@@ -18,59 +19,58 @@ $app->post('/settings/garagedoors', $authMw, function () use($app) {
   $relayGpio = $req->post('relayGpio');
 
   $n = count($name);
-
-  $door = 0;
-  for ($i = 0; $i < $n; $i++) {
+  for ($door = 0; $door < $n; $door++) {
     // Skip the door if any information is missing
-    if (!isset($name[$i]) || !isset($sensorGpio[$i]) || !isset($relayGpio[$i])) {
+    if (!isset($name[$door]) ||
+        !isset($sensorGpio[$door]) ||
+        !isset($relayGpio[$door])) {
       continue;
     }
 
+    $prefix = 'door' . $door;
+
     // Configure the garage door
-    $c1->set('name' . $door, $name[$i]);
-    $c1->set('sensorGpio' . $door, $sensorGpio[$i]);
-    $c1->set('relayGpio' . $door, $relayGpio[$i]);
+    $c->set($prefix . '.name', $name[$door]);
+    $c->set($prefix . '.sensor.gpio', $sensorGpio[$door]);
+    $c->set($prefix . '.sensor.active_low', 1);
+    $c->set($prefix . '.sensor.interval.sec', 0);
+    $c->set($prefix . '.sensor.interval.nsec', 500000000);
+    $c->set($prefix . '.sensor.notification_delay', 10.0);
+    $c->set($prefix . '.relay.gpio', $relayGpio[$door]);
+  }
 
-    // Configure the sensor gpio
-    $gpio = 'gpio' . $sensorGpio[$i];
-    $c2->set($gpio . '.direction', 0);
-    $c2->set($gpio . '.interval.sec', 0);
-    $c2->set($gpio . '.interval.nsec', 500000000);
-    $c2->set($gpio . '.active_low', 1);
-    $c2->set($gpio . '.action.type', 'print');
+  while ($door < 10) {
+    $prefix = 'door' . $door;
 
-    // Configure the relay gpio
-    $gpio = 'gpio' . $relayGpio[$i];
-    $c2->set($gpio . '.direction', 1);
+    $c->remove($prefix . '.name');
+    $c->remove($prefix . '.sensor.gpio');
+    $c->remove($prefix . '.sensor.active_low');
+    $c->remove($prefix . '.sensor.interval.sec');
+    $c->remove($prefix . '.sensor.interval.nsec');
+    $c->remove($prefix . '.sensor.notification_delay');
+    $c->remove($prefix . '.relay.gpio');
 
     $door++;
   }
 
-  if ($c1->save('garagedoors.properties') === FALSE) {
+  if ($c->save('gomd.properties') === FALSE) {
     $app->render('settings-garagedoors.php', array(
-      'site'   => 'Garage',
-      'title'  => 'Settings',
-      'tab'    => 'Garage Doors',
-      'status' => 'Failed to save garage door settings',
-    ));
-    return;
-  }
-
-  if ($c2->save('gpiod.properties') === FALSE) {
-    $app->render('settings-garagedoors.php', array(
-      'site'   => 'Garage',
-      'title'  => 'Settings',
-      'tab'    => 'Garage Doors',
-      'status' => 'Failed to save GPIO settings',
+      'site'    => 'Garage',
+      'title'   => 'Settings',
+      'tab'     => 'Garage Doors',
+      'status'  => 'error',
+      'message' => 'Failed to save garage door settings',
     ));
     return;
   }
 
   $app->render('settings-garagedoors.php', array(
-    'site'   => 'Garage',
-    'title'  => 'Settings',
-    'tab'    => 'Garage Doors',
-    'status' => 'Settings saved successfully',
+    'site'    => 'Garage',
+    'title'   => 'Settings',
+    'tab'     => 'Garage Doors',
+    'status'  => 'success',
+    'message' => 'Settings saved successfully',
   ));
 });
+
 ?>

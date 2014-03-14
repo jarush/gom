@@ -1,22 +1,20 @@
 <?php
 include 'header.inc.php';
 include 'settings-tabs.inc.php';
+include 'funcs.inc.php';
 
-// Get the network configuration
-//$c = new Config('garagedoors.properties');
-$garageDoors = GarageDoor::loadGarageDoors('garagedoors.properties', null);
-?>
-
-<?php
-if (isset($status)) {
-  echo '<div class="alert alert-success">';
-  echo '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-  echo $status;
-  echo '</div>';
-}
+$garageDoors = GarageDoor::LoadGarageDoors(null);
 ?>
 
 <div class="tab-body">
+  <div id="alert-area">
+  <?php
+    if (isset($status)) {
+      showAlert($status, $message);
+    }
+  ?>
+  </div>
+
   <form id="form" method="post">
     <div class="panel panel-default">
       <table class="table table-striped">
