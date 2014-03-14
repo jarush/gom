@@ -7,7 +7,7 @@
 #include "door.h"
 #include "config.h"
 
-#define MAX_DOORS 32
+#define MAX_DOORS 10
 
 int doors_init(config_t *config, event_mgr_t *event_mgr);
 void doors_release(void);
