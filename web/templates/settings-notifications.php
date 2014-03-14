@@ -4,7 +4,7 @@ include 'settings-tabs.inc.php';
 include 'funcs.inc.php';
 
 // Get the notifications configuration
-$c = new Config('notifications.properties');
+$c = new Config('gomd.properties');
 ?>
 
 <div class="tab-body">
@@ -23,9 +23,10 @@ $c = new Config('notifications.properties');
       <div class="form-group">
         <label class="col-sm-2 control-label" for="boxcar_access_token">Access Token</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="boxcar_access_token" id="boxcar_access_token"
+          <input type="text" class="form-control"
+                 name="boxcar_access_token" id="boxcar_access_token"
                  placeholder="Access Token" required="required"
-                 value="<?php echo $c->get('boxcar_access_token', ''); ?>" />
+                 value="<?php echo $c->get('boxcar.access_token', ''); ?>" />
         </div>
       </div>
 
@@ -64,7 +65,7 @@ $c = new Config('notifications.properties');
                 'success',
                 'up'
               );
-              $selected_sound = $c->get('boxcar_sound', null);
+              $selected_sound = $c->get('boxcar.sound', null);
               foreach ($sounds as $sound) {
                 $selected = $sound == $selected_sound ? 'selected' : '';
                 echo "<option $selected>$sound</option>";
@@ -79,7 +80,52 @@ $c = new Config('notifications.properties');
           <button type="button" id="boxcar_test" class="btn btn-primary">Test</button>
         </div>
       </div>
+    </fieldset>
+
     <fieldset>
+      <legend>Email</legend>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email_url">URL</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="email_url"
+                 placeholder="URL" required="required"
+                 value="<?php echo $c->get('email.url', ''); ?>" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email_username">Username</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="email_username"
+                 placeholder="Username" required="required"
+                 value="<?php echo $c->get('email.username', ''); ?>" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email_password">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" name="email_password"
+                 placeholder="Password" required="required"
+                 value="<?php echo $c->get('email.password', ''); ?>" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email_from">From</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="email_from"
+                 placeholder="From" required="required"
+                 value="<?php echo $c->get('email.from', ''); ?>" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email_to">To</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="email_to"
+                 placeholder="To" required="required"
+                 value="<?php echo $c->get('email.to', ''); ?>" />
+        </div>
+      </div>
+    </fieldset>
 
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">Save</button>
