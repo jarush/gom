@@ -5,7 +5,8 @@ class Config {
 
   public function __construct($filename = false) {
     if ($filename) {
-      $this->ini = parse_ini_file(APP_ROOT . '/etc/' . $filename, false, INI_SCANNER_RAW);
+      $this->ini = parse_ini_file(APP_ROOT . '/etc/' . $filename,
+        false, INI_SCANNER_RAW);
     } else {
       $this->ini = array();
     }
@@ -21,6 +22,10 @@ class Config {
 
   public function set($name, $value) {
     $this->ini[$name] = $value;
+  }
+
+  public function remove($name) {
+    unset($this->ini[$name]);
   }
 
   public function save($filename) {
