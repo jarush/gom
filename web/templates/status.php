@@ -15,6 +15,7 @@ if (isset($status)) {
 $n = count($garageDoors);
 for ($i = 0; $i < $n; $i++) {
   $name = $garageDoors[$i]->getName();
+  $number = $garageDoors[$i]->getNumber();
   $status = $garageDoors[$i]->getStatus();
   $panelClass = 'panel-default';
   $statusClass = 'text-success';
@@ -37,7 +38,7 @@ for ($i = 0; $i < $n; $i++) {
 
   <div class="panel-body">
     <button class="btn btn-lg btn-primary btn-block <?php echo $buttonClass; ?>"
-            door="<?php echo $i; ?>"
+            door="<?php echo $number; ?>"
             status="<?php echo $status; ?>">
       <?php echo $status == "Open" ? "Close" : "Open"; ?>
     </button>

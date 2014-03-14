@@ -1,24 +1,24 @@
 <?php
 
-$gpioHost = '127.0.0.1';
-$gpioPort = 6965;
+$gomHost = '127.0.0.1';
+$gomPort = 6965;
 
-$app->get('/', $authMw, function () use($app, $gpioHost, $gpioPort) {
-  $gpioClient = null;
+$app->get('/', $authMw, function () use($app, $gomHost, $gomPort) {
+  $gomClient = null;
   try {
-    $gpioClient = new GpioClient($gpioHost, $gpioPort);
+    $gomClient = new GomClient($gomHost, $gomPort);
   } catch (Exception $e) {
     $app->render('status.php', array(
       'site'        => 'Garage',
       'title'       => 'Status',
       'garageDoors' => array(),
       'status'      => 'error',
-      'message'     => 'Failed to connect to gpiod: ' . $e->getMessage()
+      'message'     => 'Failed to connect to gomd: ' . $e->getMessage()
     ));
     return;
   }
 
-  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
+  $garageDoors = GarageDoor::LoadGarageDoors($gomClient);
 
   $app->render('status.php', array(
     'site'        => 'Garage',
@@ -27,7 +27,7 @@ $app->get('/', $authMw, function () use($app, $gpioHost, $gpioPort) {
   ));
 });
 
-$app->post('/door/status', $authMw, function () use($app, $gpioHost, $gpioPort) {
+$app->post('/door/status', $authMw, function () use($app, $gomHost, $gomPort) {
   $req = $app->request();
 
   $door = $req->post('door');
@@ -40,9 +40,9 @@ $app->post('/door/status', $authMw, function () use($app, $gpioHost, $gpioPort) 
     return;
   }
 
-  $gpioClient = new GpioClient($gpioHost, $gpioPort);
+  $gomClient = new GomClient($gomHost, $gomPort);
 
-  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
+  $garageDoors = GarageDoor::LoadGarageDoors($gomClient);
   $status = $garageDoors[$door]->getStatus();
 
   echo json_encode(array(
@@ -52,7 +52,7 @@ $app->post('/door/status', $authMw, function () use($app, $gpioHost, $gpioPort) 
   ));
 });
 
-$app->post('/door/pressbutton', $authMw, function () use($app, $gpioHost, $gpioPort) {
+$app->post('/door/pressbutton', $authMw, function () use($app, $gomHost, $gomPort) {
   $req = $app->request();
 
   $door = $req->post('door');
@@ -65,9 +65,9 @@ $app->post('/door/pressbutton', $authMw, function () use($app, $gpioHost, $gpioP
     return;
   }
 
-  $gpioClient = new GpioClient($gpioHost, $gpioPort);
+  $gomClient = new GomClient($gomHost, $gomPort);
 
-  $garageDoors = GarageDoor::LoadGarageDoors('garagedoors.properties', $gpioClient);
+  $garageDoors = GarageDoor::LoadGarageDoors($gomClient);
   $garageDoors[$door]->pressButton();
 
   echo json_encode(array(

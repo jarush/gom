@@ -1,6 +1,6 @@
 <?php
 
-class GpioClient {
+class GomClient {
   private $fp;
 
   public function __construct($address, $port) {
@@ -29,8 +29,8 @@ class GpioClient {
     return $response;
   }
 
-  public function getGpio($gpio) {
-    $response = $this->sendMessage("get $gpio");
+  public function getStatus($door) {
+    $response = $this->sendMessage("get $door");
 
     if (strpos($response, 'ERROR', 0) === 0) {
       throw new Exception($response);
@@ -39,15 +39,8 @@ class GpioClient {
     return $response;
   }
 
-  public function setGpio($gpio, $value) {
-    $response = $this->sendMessage("set $gpio $value");
-    if (strpos($response, 'ERROR', 0) === 0) {
-      throw new Exception($response);
-    }
-  }
-
-  public function toggleGpio($gpio, $value, $duration) {
-    $response = $this->sendMessage("toggle $gpio $value $duration");
+  public function toggle($door) {
+    $response = $this->sendMessage("toggle $door");
     if (strpos($response, 'ERROR', 0) === 0) {
       throw new Exception($response);
     }

@@ -1,21 +1,19 @@
 <?php
 
 class GarageDoor {
-  private $gpioClient;
+  private $gomClient;
   private $name;
-  private $sensorGpio;
-  private $relayGpio;
+  private $number;
 
-  public function __construct($gpioClient, $name, $sensorGpio, $relayGpio) {
+  public function __construct($gomClient, $name, $number) {
+    $this->gomClient = $gomClient;
     $this->name = $name;
-    $this->gpioClient = $gpioClient;
-    $this->sensorGpio = $sensorGpio;
-    $this->relayGpio = $relayGpio;
+    $this->number = $number;
   }
 
   function __destruct() {
-    if ($this->gpioClient != null) {
-      $this->gpioClient->close();
+    if ($this->gomClient != null) {
+      $this->gomClient->close();
     }
   }
 
@@ -23,16 +21,12 @@ class GarageDoor {
     return $this->name;
   }
 
-  public function getSensorGpio() {
-    return $this->sensorGpio;
-  }
-
-  public function getRelayGpio() {
-    return $this->relayGpio;
+  public function getNumber() {
+    return $this->number;
   }
 
   public function isClosed() {
-    return $this->gpioClient->getGpio($this->sensorGpio) == 1;
+    return $this->gomClient->getStatus($this->number) == 1;
   }
 
   public function getStatus() {
@@ -40,25 +34,19 @@ class GarageDoor {
   }
 
   public function pressButton() {
-    $this->gpioClient->toggleGpio($this->relayGpio, 1, 250);
+    $this->gomClient->toggle($this->number);
   }
 
-  public static function loadGarageDoors($filename, $gpioClient) {
+  public static function LoadGarageDoors($gomClient) {
     $garageDoors = array();
 
-    $config = new Config('garagedoors.properties');
+    $config = new Config('gomd.properties');
 
     for ($i = 0; $i < 10; $i++) {
-      $name = $config->get('name' . $i, null);
-      $sensorGpio = $config->get('sensorGpio' . $i, null);
-      $relayGpio = $config->get('relayGpio' . $i, null);
-
-      // Skip the door if any information is missing
-      if ($name == null || $sensorGpio == null || $relayGpio == null) {
-        continue;
+      $name = $config->get('door' . $i . '.name', null);
+      if ($name != null) {
+        $garageDoors[] = new GarageDoor($gomClient, $name, $i);
       }
-
-      $garageDoors[] = new GarageDoor($gpioClient, $name, $sensorGpio, $relayGpio);
     }
 
     return $garageDoors;
