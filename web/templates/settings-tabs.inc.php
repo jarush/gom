@@ -1,8 +1,8 @@
 <?php
 $tabs = array(
   'Garage Doors' => '/settings/garagedoors',
-  'Network' => '/settings/network',
   'Notifications' => '/settings/notifications',
+  'Network' => '/settings/network',
   'Management' => '/settings/management',
   'Firmware Upgrade' => '/settings/firmwareupgrade',
 );
