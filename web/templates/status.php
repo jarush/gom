@@ -31,7 +31,7 @@ for ($i = 0; $i < $n; $i++) {
      door="<?php echo $i; ?>">
   <div class="panel-heading">
     <h3 class="panel-title">
-      Door: <?php echo $name; ?>
+      <?php echo $name; ?> Door
       <strong id="status" class="pull-right <?php echo $statusClass; ?>"><?php echo $status; ?></strong>
     </h3>
   </div>
