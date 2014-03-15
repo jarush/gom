@@ -28,12 +28,12 @@ $garageDoors = GarageDoor::LoadGarageDoors(null);
         </thead>
         <tbody>
 <?php
-foreach ($garageDoors as $gd) {
-  $enabled = $gd->getEnabled();
-  $number = $gd->getNumber();
-  $name = $gd->getName();
-  $sensorGpio = $gd->getSensorGpio();
-  $relayGpio = $gd->getRelayGpio();
+foreach ($garageDoors as $garageDoor) {
+  $enabled = $garageDoor->getEnabled();
+  $number = $garageDoor->getNumber();
+  $name = $garageDoor->getName();
+  $sensorGpio = $garageDoor->getSensorGpio();
+  $relayGpio = $garageDoor->getRelayGpio();
 ?>
           <tr door="<?php echo $number; ?>">
             <td class="text-center">
