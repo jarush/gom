@@ -3,15 +3,17 @@
 class GarageDoor {
   private $gomClient;
   private $number;
+  private $enabled;
   private $name;
   private $sensorGpio;
   private $relayGpio;
 
-  public function __construct($gomClient, $number, $name,
-      $sensorGpio, $relayGpio) {
+  public function __construct($gomClient, $number, $enabled,
+      $name, $sensorGpio, $relayGpio) {
     $this->gomClient = $gomClient;
-    $this->name = $name;
     $this->number = $number;
+    $this->enabled = $enabled;
+    $this->name = $name;
     $this->sensorGpio = $sensorGpio;
     $this->relayGpio = $relayGpio;
   }
@@ -22,12 +24,16 @@ class GarageDoor {
     }
   }
 
-  public function getName() {
-    return $this->name;
-  }
-
   public function getNumber() {
     return $this->number;
+  }
+
+  public function getEnabled() {
+    return $this->enabled;
+  }
+
+  public function getName() {
+    return $this->name;
   }
 
   public function getSensorGpio() {
@@ -55,17 +61,14 @@ class GarageDoor {
 
     $config = new Config('gomd.properties');
 
-    for ($i = 0; $i < 10; $i++) {
-      $name = $config->get('door' . $i . '.name', null);
-      $sensorGpio = $config->get('door' . $i . '.sensor.gpio', null);
-      $relayGpio = $config->get('door' . $i . '.relay.gpio', null);
+    for ($i = 0; $i < 3; $i++) {
+      $enabled = $config->get('door' . $i . '.enabled', 'false') == 'true';
+      $name = $config->get('door' . $i . '.name', '');
+      $sensorGpio = $config->get('door' . $i . '.sensor.gpio', '');
+      $relayGpio = $config->get('door' . $i . '.relay.gpio', '');
 
-      if ($name == null || $sensorGpio == null || $relayGpio == null) {
-        continue;
-      }
-
-      $garageDoors[] = new GarageDoor($gomClient, $i, $name,
-        $sensorGpio, $relayGpio);
+      $garageDoors[] = new GarageDoor($gomClient, $i, $enabled,
+        $name, $sensorGpio, $relayGpio);
     }
 
     return $garageDoors;

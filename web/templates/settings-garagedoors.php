@@ -20,40 +20,44 @@ $garageDoors = GarageDoor::LoadGarageDoors(null);
       <table class="table table-striped">
         <thead>
           <tr>
+            <th>Enabled</th>
             <th>Name</th>
             <th>Sensor GPIO</th>
             <th>Relay GPIO</th>
-            <th class="text-center">
-              <button type="button" class="btn btn-default" id="add_door">Add Door</button>
-            </th>
           </tr>
         </thead>
         <tbody>
 <?php
-
-$numGarageDoors = 0;
 foreach ($garageDoors as $gd) {
-  $numGarageDoors++;
-
+  $enabled = $gd->getEnabled();
+  $number = $gd->getNumber();
+  $name = $gd->getName();
+  $sensorGpio = $gd->getSensorGpio();
+  $relayGpio = $gd->getRelayGpio();
 ?>
-          <tr>
+          <tr door="<?php echo $number; ?>">
+            <td class="text-center">
+              <input type="checkbox" class="btn btn-danger" name="enabled[]"
+                     door="<?php echo $number; ?>"
+                     <?php echo $enabled ? 'checked="checked"' : ''; ?> />
+            </td>
             <td>
-              <input type="text" name="name[]" class="form-control"
-                     value="<?php echo $gd->getName(); ?>"
+              <input type="text" class="form-control" name="name[]"
+                     value="<?php echo $name; ?>"
+                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
                      required="required" />
             </td>
             <td>
-              <input type="text" name="sensorGpio[]" class="form-control"
-                     value="<?php echo $gd->getSensorGpio(); ?>"
+              <input type="text" class="form-control" name="sensorGpio[]"
+                     value="<?php echo $sensorGpio; ?>"
+                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
                      required="required" pattern="\d+" />
             </td>
             <td>
-              <input type="text" name="relayGpio[]" class="form-control"
-                     value="<?php echo $gd->getRelayGpio(); ?>"
+              <input type="text" class="form-control" name="relayGpio[]"
+                     value="<?php echo $relayGpio; ?>"
+                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
                      required="required" pattern="\d+" />
-            </td>
-            <td class="text-center">
-              <input type="button" class="btn btn-danger" name="remove" value="Remove" />
             </td>
           </tr>
 <?php
@@ -71,63 +75,15 @@ foreach ($garageDoors as $gd) {
 </div>
 
 <script type="text/javascript">
-  numGarageDoors = <?php echo $numGarageDoors; ?>;
+  $("input[name='enabled[]']").click(function() {
+    // Get the door index
+    var door = $(this).attr('door');
 
-  $('#add_door').click(function() {
-    if (numGarageDoors >= 10) {
-      return;
+    if ($(this).prop('checked')) {
+      $("tr[door='"+door+"'] input[type='text']").removeAttr('disabled');
+    } else {
+      $("tr[door='"+door+"'] input[type='text']").attr('disabled', 'disabled');
     }
-
-    numGarageDoors++;
-
-    $('tbody').append(
-      $('<tr>').append([
-        $('<td>').append(
-          $('<input>').attr({
-            'type'     : 'text',
-            'name'     : 'name[]',
-            'class'    : 'form-control',
-            'required' : 'required',
-          })
-        ),
-        $('<td>').append(
-          $('<input>').attr({
-            'type'     : 'text',
-            'name'     : 'sensorGpio[]',
-            'class'    : 'form-control',
-            'required' : 'required',
-            'pattern'  : '\\d+',
-          })
-        ),
-        $('<td>').append(
-          $('<input>').attr({
-            'type'     : 'text',
-            'name'     : 'relayGpio[]',
-            'class'    : 'form-control',
-            'required' : 'required',
-            'pattern'  : '\\d+',
-          })
-        ),
-        $('<td>').attr({
-          'class' : 'text-center'
-        }).append(
-          $('<input>').attr({
-            'type'  : 'button',
-            'class' : 'btn btn-danger',
-            'name'  : 'remove',
-            'value' : 'Remove'
-          }).click(function() {
-            $(this).parents('tr').remove();
-            numGarageDoors--;
-          })
-        ),
-      ])
-    );
-  });
-
-  $('input[name="remove"]').click(function() {
-    $(this).parents('tr').remove();
-    numGarageDoors--;
   });
 </script>
 

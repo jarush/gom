@@ -17,23 +17,44 @@ $c = new Config('gomd.properties');
   </div>
 
   <form class="form-horizontal" method="post">
-    <fieldset>
-      <legend>Boxcar</legend>
+    <legend>Boxcar</legend>
 
+    <?php
+      $boxcarEnabled = $c->get('boxcar.enabled', 'false');
+      $boxcarAccessToken = $c->get('boxcar.access_token', '');
+      $boxcarSound = $c->get('boxcar.sound', 'beep-crisp');
+    ?>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="boxcarEnabled">Enabled</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
+          <input type="radio" name="boxcarEnabled" value="true"
+                 <?php echo ($boxcarEnabled == 'true') ? 'checked' : ''?>/>Enabled
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="boxcarEnabled" value="false"
+                 <?php echo ($boxcarEnabled != 'true') ? 'checked' : ''?>/>Disabled
+        </label>
+      </div>
+    </div>
+
+    <fieldset id="boxcarFields"
+              <?php echo ($boxcarEnabled != 'true') ? 'disabled="disabled"' : ''; ?>>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="boxcar_access_token">Access Token</label>
+        <label class="col-sm-2 control-label" for="boxcarAccessToken">Access Token</label>
         <div class="col-sm-10">
           <input type="text" class="form-control"
-                 name="boxcar_access_token" id="boxcar_access_token"
+                 name="boxcarAccessToken" id="boxcarAccessToken"
                  placeholder="Access Token" required="required"
-                 value="<?php echo $c->get('boxcar.access_token', ''); ?>" />
+                 value="<?php echo $boxcarAccessToken; ?>" />
         </div>
       </div>
 
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="boxcar_sound">Sound</label>
+        <label class="col-sm-2 control-label" for="boxcarSound">Sound</label>
         <div class="col-sm-10">
-          <select class="form-control" name="boxcar_sound" id="boxcar_sound">
+          <select class="form-control" name="boxcarSound" id="boxcarSound">
             <?php
               $sounds = array(
                 'beep-crisp',
@@ -65,9 +86,8 @@ $c = new Config('gomd.properties');
                 'success',
                 'up'
               );
-              $selected_sound = $c->get('boxcar.sound', null);
               foreach ($sounds as $sound) {
-                $selected = $sound == $selected_sound ? 'selected' : '';
+                $selected = $sound == $boxcarSound ? 'selected' : '';
                 echo "<option $selected>$sound</option>";
               }
             ?>
@@ -77,52 +97,76 @@ $c = new Config('gomd.properties');
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="button" id="boxcar_test" class="btn btn-primary">Test</button>
+          <button type="button" id="boxcarTest" class="btn btn-primary">Test</button>
         </div>
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Email</legend>
+    <legend>Email</legend>
 
+    <?php
+      $emailEnabled = $c->get('email.enabled', 'false');
+      $emailUrl = $c->get('email.url', '');
+      $emailUsername = $c->get('email.username', '');
+      $emailPassword = $c->get('email.password', '');
+      $emailFrom = $c->get('email.from', '');
+      $emailTo = $c->get('email.to', '');
+    ?>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="emailEnabled">Enabled</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
+          <input type="radio" name="emailEnabled" value="true"
+                 <?php echo ($emailEnabled == 'true') ? 'checked' : ''?>/>Enabled
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="emailEnabled" value="false"
+                 <?php echo ($emailEnabled != 'true') ? 'checked' : ''?>/>Disabled
+        </label>
+      </div>
+    </div>
+
+    <fieldset id="emailFields"
+              <?php echo ($emailEnabled != 'true') ? 'disabled="disabled"' : ''; ?>>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="email_url">URL</label>
+        <label class="col-sm-2 control-label" for="emailUrl">URL</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="email_url"
+          <input type="text" class="form-control" name="emailUrl"
                  placeholder="URL" required="required"
-                 value="<?php echo $c->get('email.url', ''); ?>" />
+                 value="<?php echo $emailUrl; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="email_username">Username</label>
+        <label class="col-sm-2 control-label" for="emailUsername">Username</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="email_username"
+          <input type="text" class="form-control" name="emailUsername"
                  placeholder="Username" required="required"
-                 value="<?php echo $c->get('email.username', ''); ?>" />
+                 value="<?php echo $emailUsername; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="email_password">Password</label>
+        <label class="col-sm-2 control-label" for="emailPassword">Password</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" name="email_password"
+          <input type="password" class="form-control" name="emailPassword"
                  placeholder="Password" required="required"
-                 value="<?php echo $c->get('email.password', ''); ?>" />
+                 value="<?php echo $emailPassword; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="email_from">From</label>
+        <label class="col-sm-2 control-label" for="emailFrom">From</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="email_from"
+          <input type="text" class="form-control" name="emailFrom"
                  placeholder="From" required="required"
-                 value="<?php echo $c->get('email.from', ''); ?>" />
+                 value="<?php echo $emailFrom; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="email_to">To</label>
+        <label class="col-sm-2 control-label" for="emailTo">To</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="email_to"
+          <input type="text" class="form-control" name="emailTo"
                  placeholder="To" required="required"
-                 value="<?php echo $c->get('email.to', ''); ?>" />
+                 value="<?php echo $emailTo; ?>" />
         </div>
       </div>
     </fieldset>
@@ -135,14 +179,30 @@ $c = new Config('gomd.properties');
 </div>
 
 <script type="text/javascript">
-  $('#boxcar_test').click(function() {
+  $("input[name='boxcarEnabled']").click(function() {
+    if ($(this).val() == 'true') {
+      $("#boxcarFields").removeAttr('disabled');
+    } else {
+      $("#boxcarFields").attr('disabled', 'disabled');
+    }
+  });
+
+  $("input[name='emailEnabled']").click(function() {
+    if ($(this).val() == 'true') {
+      $("#emailFields").removeAttr('disabled');
+    } else {
+      $("#emailFields").attr('disabled', 'disabled');
+    }
+  });
+
+  $('#boxcarTest').click(function() {
     $.ajax({
       type:     'POST',
       url:      '/settings/notifications/boxcar_test',
       dataType: 'json',
       data: {
-        'access_token': $('#boxcar_access_token').val(),
-        'sound':        $('#boxcar_sound').val()
+        'boxcarAccessToken': $('#boxcarAccessToken').val(),
+        'boxcarSound':       $('#boxcarSound').val()
       },
     })
     .done(function(data, textStatus, xhr) {

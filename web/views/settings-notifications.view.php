@@ -13,20 +13,55 @@ $app->get('/test', function () use($app) {
 });
 
 $app->post('/settings/notifications', $authMw, function() use($app) {
-  $config = new Config('notifications.properties');
+  $config = new Config('gomd.properties');
   $req = $app->request();
 
-  $boxcarAccessToken = $req->post('boxcar_access_token');
+  $boxcarEnabled = $req->post('boxcarEnabled');
+  if (isset($boxcarEnabled)) {
+    $config->set('boxcar.enabled', $boxcarEnabled);
+  }
+
+  $boxcarAccessToken = $req->post('boxcarAccessToken');
   if (isset($boxcarAccessToken)) {
-    $config->set('boxcar_access_token', $boxcarAccessToken);
+    $config->set('boxcar.access_token', $boxcarAccessToken);
   }
 
-  $boxcarSound = $req->post('boxcar_sound');
+  $boxcarSound = $req->post('boxcarSound');
   if (isset($boxcarSound)) {
-    $config->set('boxcar_sound', $boxcarSound);
+    $config->set('boxcar.sound', $boxcarSound);
   }
 
-  if ($config->save('notifications.properties') === FALSE) {
+  $emailEnabled = $req->post('emailEnabled');
+  if (isset($emailEnabled)) {
+    $config->set('email.enabled', $emailEnabled);
+  }
+
+  $emailUrl = $req->post('emailUrl');
+  if (isset($emailUrl)) {
+    $config->set('email.url', $emailUrl);
+  }
+
+  $emailUsername = $req->post('emailUsername');
+  if (isset($emailUsername)) {
+    $config->set('email.username', $emailUsername);
+  }
+
+  $emailPassword = $req->post('emailPassword');
+  if (isset($emailPassword)) {
+    $config->set('email.password', $emailPassword);
+  }
+
+  $emailFrom = $req->post('emailFrom');
+  if (isset($emailFrom)) {
+    $config->set('email.from', $emailFrom);
+  }
+
+  $emailTo = $req->post('emailTo');
+  if (isset($emailTo)) {
+    $config->set('email.to', $emailTo);
+  }
+
+  if ($config->save('gomd.properties') === FALSE) {
     $app->render('settings-notifications.php', array(
       'site'    => 'Garage',
       'title'   => 'Settings',
@@ -49,9 +84,9 @@ $app->post('/settings/notifications', $authMw, function() use($app) {
 $app->post('/settings/notifications/boxcar_test', $authMw, function() use($app) {
   $req = $app->request();
 
-  $accessToken = $req->post('access_token');
-  $sound = $req->post('sound');
-  if (!isset($accessToken) || !isset($sound)) {
+  $boxcarAccessToken = $req->post('boxcarAccessToken');
+  $boxcarSound = $req->post('boxcarSound');
+  if (!isset($boxcarAccessToken) || !isset($boxcarSound)) {
     echo json_encode(array(
       'status'  => 'error',
       'message' => 'Missing required parameter(s)',
@@ -63,10 +98,10 @@ $app->post('/settings/notifications/boxcar_test', $authMw, function() use($app) 
   $url = 'https://new.boxcar.io/api/notifications';
 
   $postFields = http_build_query(array(
-    'user_credentials'           => $accessToken,
+    'user_credentials'           => $boxcarAccessToken,
     'notification[title]'        => 'Test',
     'notification[long_message]' => 'This is a test',
-    'notification[sound]'        => $sound,
+    'notification[sound]'        => $boxcarSound,
   ));
 
   $ch = curl_init($url);
