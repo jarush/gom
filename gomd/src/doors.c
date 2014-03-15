@@ -22,8 +22,8 @@ int doors_init(config_t *config, event_mgr_t *event_mgr) {
     snprintf(prefix, sizeof(prefix), "door%d", i);
 
     // Check if this door exists
-    snprintf(str, sizeof(str), "%s.name", prefix);
-    if (config_get_string(config, str, NULL) == NULL) {
+    snprintf(str, sizeof(str), "%s.enabled", prefix);
+    if (config_get_boolean(config, str, 0) != 1) {
       continue;
     }
 
