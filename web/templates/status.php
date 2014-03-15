@@ -13,17 +13,20 @@ if (isset($status)) {
 
 <?php
 foreach ($garageDoors as $garageDoor) {
-  $number = $garageDoor->getNumber();
-  $name = $garageDoor->getName();
-  $status = $garageDoor->getStatus();
-  $panelClass = 'panel-default';
-  $statusClass = 'text-success';
-  $buttonClass = '';
-  if ($status == 'Open') {
-    $panelClass = 'panel-danger';
-    $statusClass = 'text-danger';
-    $buttonClass = 'btn-danger';
-  }
+  $enabled = $garageDoor->getEnabled();
+
+  if ($enabled) {
+    $number = $garageDoor->getNumber();
+    $name = $garageDoor->getName();
+    $status = $garageDoor->getStatus();
+    $panelClass = 'panel-default';
+    $statusClass = 'text-success';
+    $buttonClass = '';
+    if ($status == 'Open') {
+      $panelClass = 'panel-danger';
+      $statusClass = 'text-danger';
+      $buttonClass = 'btn-danger';
+    }
 ?>
 
 <div class="panel <?php echo $panelClass; ?>"
@@ -45,6 +48,7 @@ foreach ($garageDoors as $garageDoor) {
 </div>
 
 <?php
+  }
 }
 ?>
 
