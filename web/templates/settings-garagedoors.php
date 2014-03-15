@@ -37,26 +37,28 @@ foreach ($garageDoors as $garageDoor) {
 ?>
           <tr door="<?php echo $number; ?>">
             <td class="text-center">
-              <input type="checkbox" class="btn btn-danger" name="enabled[]"
+              <input type="checkbox" class="btn btn-danger"
                      door="<?php echo $number; ?>"
                      <?php echo $enabled ? 'checked="checked"' : ''; ?> />
+              <input type="hidden" name="enabled[]"
+                     value="<?php echo $enabled ? 'true' : 'false'; ?>" />
             </td>
             <td>
               <input type="text" class="form-control" name="name[]"
                      value="<?php echo $name; ?>"
-                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
+                     <?php echo (!$enabled) ? 'readonly="readonly"' : ''; ?>
                      required="required" />
             </td>
             <td>
               <input type="text" class="form-control" name="sensorGpio[]"
                      value="<?php echo $sensorGpio; ?>"
-                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
+                     <?php echo (!$enabled) ? 'readonly="readonly"' : ''; ?>
                      required="required" pattern="\d+" />
             </td>
             <td>
               <input type="text" class="form-control" name="relayGpio[]"
                      value="<?php echo $relayGpio; ?>"
-                     <?php echo (!$enabled) ? 'disabled="disabled"' : ''; ?>
+                     <?php echo (!$enabled) ? 'readonly="readonly"' : ''; ?>
                      required="required" pattern="\d+" />
             </td>
           </tr>
@@ -75,15 +77,13 @@ foreach ($garageDoors as $garageDoor) {
 </div>
 
 <script type="text/javascript">
-  $("input[name='enabled[]']").click(function() {
-    // Get the door index
+  $("input[type='checkbox']").click(function() {
+    var disabled = !$(this).prop('checked');
     var door = $(this).attr('door');
 
-    if ($(this).prop('checked')) {
-      $("tr[door='"+door+"'] input[type='text']").removeAttr('disabled');
-    } else {
-      $("tr[door='"+door+"'] input[type='text']").attr('disabled', 'disabled');
-    }
+    $(this).next().prop('value', disabled ? 'false' : 'true');
+
+    $("tr[door='"+door+"'] input[type='text']").prop('readonly', disabled);
   });
 </script>
 

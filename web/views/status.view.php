@@ -46,7 +46,7 @@ $app->post('/door/status', $authMw, function () use($app, $gomHost, $gomPort) {
   $status = $garageDoors[$door]->getStatus();
 
   echo json_encode(array(
-    'status'     => 'ok',
+    'status'     => 'success',
     'door'       => $door,
     'doorStatus' => $status,
   ));
@@ -71,7 +71,8 @@ $app->post('/door/pressbutton', $authMw, function () use($app, $gomHost, $gomPor
   $garageDoors[$door]->pressButton();
 
   echo json_encode(array(
-    'status'   => 'ok',
+    'status' => 'success',
+    'door'   => $door,
   ));
 });
 

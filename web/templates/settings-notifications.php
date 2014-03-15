@@ -180,19 +180,13 @@ $c = new Config('gomd.properties');
 
 <script type="text/javascript">
   $("input[name='boxcarEnabled']").click(function() {
-    if ($(this).val() == 'true') {
-      $("#boxcarFields").removeAttr('disabled');
-    } else {
-      $("#boxcarFields").attr('disabled', 'disabled');
-    }
+    var disabled = $(this).val() != 'true';
+    $("#boxcarFields").prop('disabled', disabled);
   });
 
   $("input[name='emailEnabled']").click(function() {
-    if ($(this).val() == 'true') {
-      $("#emailFields").removeAttr('disabled');
-    } else {
-      $("#emailFields").attr('disabled', 'disabled');
-    }
+    var disabled = $(this).val() != 'true';
+    $("#emailFields").prop('disabled', disabled);
   });
 
   $('#boxcarTest').click(function() {

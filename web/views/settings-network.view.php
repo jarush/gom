@@ -12,29 +12,29 @@ $app->post('/settings/network', $authMw, function () use($app) {
   $config = new Config('network.properties');
   $req = $app->request();
 
-  $eth = $req->post('eth');
-  if (isset($eth)) {
-    $config->set('eth', $eth);
+  $ethEnabled = $req->post('ethEnabled');
+  if (isset($ethEnabled)) {
+    $config->set('eth.enabled', $ethEnabled);
   }
 
-  $eth_dhcp = $req->post('eth_dhcp');
-  if (isset($eth_dhcp)) {
-    $config->set('eth_dhcp', $eth_dhcp);
+  $ethDhcp = $req->post('ethDhcp');
+  if (isset($ethDhcp)) {
+    $config->set('eth.dhcp', $ethDhcp);
   }
 
-  $eth_static_address = $req->post('eth_static_address');
-  if (isset($eth_static_address)) {
-    $config->set('eth_static_address', $eth_static_address);
+  $ethStaticAddress = $req->post('ethStaticAddress');
+  if (isset($ethStaticAddress)) {
+    $config->set('eth.static.address', $ethStaticAddress);
   }
 
-  $eth_static_netmask = $req->post('eth_static_netmask');
-  if (isset($eth_static_netmask)) {
-    $config->set('eth_static_netmask', $eth_static_netmask);
+  $ethStaticNetmask = $req->post('ethStaticNetmask');
+  if (isset($ethStaticNetmask)) {
+    $config->set('eth.static.netmask', $ethStaticNetmask);
   }
 
-  $eth_static_gateway = $req->post('eth_static_gateway');
-  if (isset($eth_static_gateway)) {
-    $config->set('eth_static_gateway', $eth_static_gateway);
+  $ethStaticGateway = $req->post('ethStaticGateway');
+  if (isset($ethStaticGateway)) {
+    $config->set('eth.static.gateway', $ethStaticGateway);
   }
 
   if ($config->save('network.properties') === FALSE) {
