@@ -6,9 +6,11 @@ class NetworkInterface {
   private $method;
 
   private $options;
+  private $auto;
 
   public function __construct() {
     $this->options = array();
+    $this->auto = FALSE;
   }
 
   public function getName() {
@@ -47,6 +49,14 @@ class NetworkInterface {
     $this->options[$name] = $value;
   }
 
+  public function isAuto() {
+    return $this->auto;
+  }
+
+  public function setAuto($auto) {
+    $this->auto = $auto;
+  }
+
   public static function LoadNetworkInterfaces($filename) {
     $interfaces = array();
 
@@ -71,16 +81,29 @@ class NetworkInterface {
       // Parse the line of supported values
       switch ($tokens[0]) {
         case 'iface':
-          $interface = new NetworkInterface();
+          if (!isset($interfaces[$tokens[1]])) {
+            $interface = new NetworkInterface();
+            $interfaces[$tokens[1]] = $interface;
+          } else {
+            $interface = $interfaces[$tokens[1]];
+          }
+
           $interface->setName($tokens[1]);
           $interface->setAddressFamily($tokens[2]);
           $interface->setMethod($tokens[3]);
+          break;
 
-          $interfaces[$tokens[1]] = $interface;
+        case 'auto':
+          if (!isset($interfaces[$tokens[1]])) {
+            $interface = new NetworkInterface();
+            $interfaces[$tokens[1]] = $interface;
+          } else {
+            $interface = $interfaces[$tokens[1]];
+          }
+          $interface->setAuto(TRUE);
           break;
 
         // Unsupported "stanzas"
-        case 'auto':
         case 'allow-hotplug':
         case 'mapping':
         case 'source':
@@ -107,7 +130,10 @@ class NetworkInterface {
     }
 
     foreach ($interfaces as $interface) {
-      fwrite($fh, "auto " . $interface->getName() . "\n");
+      if ($interface->isAuto() === TRUE) {
+        fwrite($fh, "auto " . $interface->getName() . "\n");
+      }
+
       fwrite($fh, "iface " . $interface->getName() . " " .
           $interface->getAddressFamily() . " " . $interface->getMethod() . "\n");
 
