@@ -7,9 +7,9 @@ include 'settings-tabs.inc.php';
   <legend>Firmware Upgrade</legend>
   <form id="form" class="form-horizontal" enctype="multipart/form-data" method="post">
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="pretty-file">Firmware File</label>
+      <label class="col-sm-3 control-label" for="pretty-file">Firmware File</label>
       <input id="file" type="file" name="file" class="hide"/>
-      <div class="col-sm-10">
+      <div class="col-sm-9">
         <div class="input-group">
           <input type="text" class="form-control" id="pretty-file"
                  onclick="$('#file').click();">
@@ -21,7 +21,7 @@ include 'settings-tabs.inc.php';
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
+      <div class="col-sm-offset-3 col-sm-9">
         <input type="button" class="btn btn-primary" id="upgrade" value="Upgrade" disabled="disabled"/>
       </div>
     </div>

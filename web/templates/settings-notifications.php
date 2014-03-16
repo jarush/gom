@@ -26,8 +26,8 @@ $c = new Config('gomd.properties');
     ?>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="boxcarEnabled">Enabled</label>
-      <div class="col-sm-10">
+      <label class="col-sm-3 control-label" for="boxcarEnabled">Enabled</label>
+      <div class="col-sm-9">
         <label class="radio-inline">
           <input type="radio" name="boxcarEnabled" value="true"
                  <?php echo ($boxcarEnabled == 'true') ? 'checked' : ''?>/>Enabled
@@ -42,8 +42,8 @@ $c = new Config('gomd.properties');
     <fieldset id="boxcarFields"
               <?php echo ($boxcarEnabled != 'true') ? 'disabled="disabled"' : ''; ?>>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="boxcarAccessToken">Access Token</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="boxcarAccessToken">Access Token</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control"
                  name="boxcarAccessToken" id="boxcarAccessToken"
                  placeholder="Access Token" required="required"
@@ -52,8 +52,8 @@ $c = new Config('gomd.properties');
       </div>
 
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="boxcarSound">Sound</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="boxcarSound">Sound</label>
+        <div class="col-sm-9">
           <select class="form-control" name="boxcarSound" id="boxcarSound">
             <?php
               $sounds = array(
@@ -96,7 +96,7 @@ $c = new Config('gomd.properties');
       </div>
 
       <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
+        <div class="col-sm-offset-3 col-sm-9">
           <button type="button" id="boxcarTest" class="btn btn-primary">Test</button>
         </div>
       </div>
@@ -114,8 +114,8 @@ $c = new Config('gomd.properties');
     ?>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="emailEnabled">Enabled</label>
-      <div class="col-sm-10">
+      <label class="col-sm-3 control-label" for="emailEnabled">Enabled</label>
+      <div class="col-sm-9">
         <label class="radio-inline">
           <input type="radio" name="emailEnabled" value="true"
                  <?php echo ($emailEnabled == 'true') ? 'checked' : ''?>/>Enabled
@@ -130,40 +130,40 @@ $c = new Config('gomd.properties');
     <fieldset id="emailFields"
               <?php echo ($emailEnabled != 'true') ? 'disabled="disabled"' : ''; ?>>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="emailUrl">URL</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="emailUrl">URL</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control" name="emailUrl"
                  placeholder="URL" required="required"
                  value="<?php echo $emailUrl; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="emailUsername">Username</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="emailUsername">Username</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control" name="emailUsername"
                  placeholder="Username" required="required"
                  value="<?php echo $emailUsername; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="emailPassword">Password</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="emailPassword">Password</label>
+        <div class="col-sm-9">
           <input type="password" class="form-control" name="emailPassword"
                  placeholder="Password" required="required"
                  value="<?php echo $emailPassword; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="emailFrom">From</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="emailFrom">From</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control" name="emailFrom"
                  placeholder="From" required="required"
                  value="<?php echo $emailFrom; ?>" />
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="emailTo">To</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="emailTo">To</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control" name="emailTo"
                  placeholder="To" required="required"
                  value="<?php echo $emailTo; ?>" />

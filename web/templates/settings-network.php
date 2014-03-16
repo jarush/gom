@@ -23,8 +23,8 @@ $ethStaticGateway = $c->get('eth.static.gateway', '');
   <form class="form-horizontal" method="post">
       <legend>Ethernet Interface</legend>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="ethEnabled">Interface</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="ethEnabled">Interface</label>
+        <div class="col-sm-9">
           <label class="radio-inline">
             <input type="radio" name="ethEnabled" value="enabled"
                    <?php echo ($ethEnabled) ? 'checked="checked"' : ''?>/>Enabled
@@ -39,8 +39,8 @@ $ethStaticGateway = $c->get('eth.static.gateway', '');
     <fieldset id="ethFields"
               <?php echo (!$ethEnabled) ? 'disabled="disabled"' : ''; ?>>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="ethDhcp">DHCP</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label" for="ethDhcp">DHCP</label>
+        <div class="col-sm-9">
           <label class="radio-inline">
             <input type="radio" name="ethDhcp" value="enabled"
                    <?php echo ($ethDhcp) ? 'checked="checked"' : ''?>/>Enabled
@@ -55,8 +55,8 @@ $ethStaticGateway = $c->get('eth.static.gateway', '');
     <fieldset id="ethStaticFields"
               <?php echo ($ethDhcp) ? 'disabled="disabled"' : ''; ?>>
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="ethStaticAddress">Static Address</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label" for="ethStaticAddress">Static Address</label>
+          <div class="col-sm-9">
             <input type="text" name="ethStaticAddress" class="form-control"
                    placeholder="IP Address" required="required"
                    pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
@@ -65,8 +65,8 @@ $ethStaticGateway = $c->get('eth.static.gateway', '');
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="ethStaticNetmask">Netmask</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label" for="ethStaticNetmask">Netmask</label>
+          <div class="col-sm-9">
             <input type="text" name="ethStaticNetmask" class="form-control"
                    placeholder="Netmask" required="required"
                    pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
@@ -75,8 +75,8 @@ $ethStaticGateway = $c->get('eth.static.gateway', '');
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="ethStaticGateway">Gateway</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label" for="ethStaticGateway">Gateway</label>
+          <div class="col-sm-9">
             <input type="text" name="ethStaticGateway" class="form-control"
                    placeholder="Gateway Address" required="required"
                    pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
