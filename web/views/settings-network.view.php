@@ -56,12 +56,15 @@ $app->post('/settings/network', $authMw, function () use($app) {
     return;
   }
 
+  # Initiate a reboot in a couple of seconds
+  exec('(sleep 2; sudo /bin/busybox reboot) &> /dev/null &');
+
   $app->render('settings-network.php', array(
     'site'    => 'Garage',
     'title'   => 'Settings',
     'tab'     => 'Network',
     'status'  => 'success',
-    'message' => 'Settings saved successfully',
+    'message' => 'Settings saved successfully, rebooting',
   ));
 });
 
