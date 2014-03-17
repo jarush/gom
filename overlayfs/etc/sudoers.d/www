@@ -1,0 +1,12 @@
+##
+## Sudoers file to permit the WWW user's execute specific commands
+##
+
+# WWW Users
+User_Alias WWW = www-data
+
+# Commands WWW user's can run
+Cmnd_Alias WWW_CMDS = /bin/busybox reboot
+
+WWW ALL=(root) NOPASSWD:WWW_CMDS
+
