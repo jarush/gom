@@ -15,11 +15,10 @@ $app = new \Slim\Slim(array(
 // Include the views
 require '../views/login.view.php';
 require '../views/status.view.php';
-require '../views/settings-firmwareupgrade.view.php';
 require '../views/settings-garagedoors.view.php';
-require '../views/settings-management.view.php';
-require '../views/settings-network.view.php';
 require '../views/settings-notifications.view.php';
+require '../views/settings-network.view.php';
+require '../views/settings-management.view.php';
 
 $app->run();
 
