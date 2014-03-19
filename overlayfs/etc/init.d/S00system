@@ -17,6 +17,33 @@ case "$1" in
     /bin/mkdir -p /dev/pts
     /bin/mount -a
 
+    # Check if running from a ramdisk
+    if cat /proc/cmdline | grep -q root=/dev/ram0; then
+      # Temporarly mount the config partition
+      [ ! -d /tmpconfig ] && mkdir /tmpconfig
+      mount /dev/mmcblk0p2 /tmpconfig
+
+      # Copy default config files to the mount point
+      if [ ! -f /tmpconfig/interfaces ]; then
+        cp /config/interfaces /tmpconfig/interfaces
+        chown www-data.www-data /tmpconfig/interfaces
+      fi
+      if [ ! -f /tmpconfig/login.properties ]; then
+        cp /config/login.properties /tmpconfig/login.properties
+        chown www-data.www-data /tmpconfig/login.properties
+      fi
+      if [ ! -f /tmpconfig/gomd.properties ]; then
+        cp /config/gomd.properties /tmpconfig/gomd.properties
+        chown www-data.www-data /tmpconfig/gomd.properties
+      fi
+
+      # Unmount the parition and delete the temp mountpoint
+      umount /tmpconfig && rm -rf /tmpconfig
+
+      # Mount the config partition
+      mount /dev/mmcblk0p2 /config
+    fi
+
     # Configure the hostname
     echo "Setting hostname..."
     /bin/hostname -F /etc/hostname
