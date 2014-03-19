@@ -3,10 +3,15 @@
 # Starts gomd
 #
 
+CONFIG=/config/gomd.properties
+if [ ! -f $CONFIG ]; then
+  CONFIG=/etc/gomd.properties
+fi
+
 start() {
   echo -n "Starting gomd: "
   start-stop-daemon -S -q -p /var/run/gomd.pid \
-    --exec /usr/bin/gomd -- /etc/gomd.properties
+    --exec /usr/bin/gomd -- $CONFIG
   [ $? == 0 ] && echo "OK" || echo "FAIL"
 }
 

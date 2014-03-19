@@ -3,6 +3,11 @@
 # Start the network....
 #
 
+CONFIG=/config/interfaces
+if [ ! -f $CONFIG ]; then
+  CONFIG=/etc/network/interfaces
+fi
+
 case "$1" in
   start)
     echo "Starting network..."
@@ -15,11 +20,11 @@ case "$1" in
       nsecs=$(($nsecs-1))
     done
 
-    /sbin/ifup -a
+    /sbin/ifup -a -i $CONFIG
     ;;
   stop)
     echo -n "Stopping network..."
-    /sbin/ifdown -a
+    /sbin/ifdown -a -i $CONFIG
     ;;
   restart|reload)
     "$0" stop
