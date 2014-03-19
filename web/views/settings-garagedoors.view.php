@@ -11,7 +11,7 @@ $app->get('/settings/garagedoors', $authMw, function () use($app) {
 });
 
 $app->post('/settings/garagedoors', $authMw, function () use($app) {
-  $c = new Config('gomd.properties');
+  $c = new Config('/config/gomd.properties');
 
   $req = $app->request();
   $enabled = $req->post('enabled');
@@ -44,7 +44,7 @@ $app->post('/settings/garagedoors', $authMw, function () use($app) {
     }
   }
 
-  if ($c->save('gomd.properties') === FALSE) {
+  if ($c->save('/config/gomd.properties') === FALSE) {
     $app->render('settings-garagedoors.php', array(
       'site'    => 'Garage',
       'title'   => 'Settings',

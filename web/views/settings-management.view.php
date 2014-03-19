@@ -35,11 +35,11 @@ $app->post('/settings/management', $authMw, function () use($app) {
     return;
   }
 
-  $c = new Config('login.properties');
+  $c = new Config('/config/login.properties');
   $c->set('username', $username);
   $c->set('password', $password1);
 
-  if ($c->save('login.properties') === FALSE) {
+  if ($c->save('/config/login.properties') === FALSE) {
     $app->render('settings-management.php', array(
       'site'    => 'Garage',
       'title'   => 'Settings',

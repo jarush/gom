@@ -13,7 +13,7 @@ $authMw = function() use($app) {
   $password = $app->getCookie('password');
   if (!empty($username) && !empty($password)) {
     // Check the username and password
-    $config = new Config('login.properties');
+    $config = new Config('/config/login.properties');
     if ($username == $config->get('username', null) &&
         $password == $config->get('password', null)) {
       // Set the session variable
@@ -46,7 +46,7 @@ $app->post('/login', function() use($app) {
   $password = $req->post('password');
 
   // Check the username and password
-  $config = new Config('login.properties');
+  $config = new Config('/config/login.properties');
   if ($username != $config->get('username', null) ||
       $password != $config->get('password', null)) {
     $app->redirect('/login');

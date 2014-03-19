@@ -59,7 +59,7 @@ class GarageDoor {
   public static function LoadGarageDoors($gomClient) {
     $garageDoors = array();
 
-    $config = new Config('gomd.properties');
+    $config = new Config('/config/gomd.properties');
 
     for ($i = 0; $i < 3; $i++) {
       $enabled = $config->get('door' . $i . '.enabled', 'false') == 'true';

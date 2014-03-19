@@ -4,7 +4,7 @@ include 'settings-tabs.inc.php';
 include 'funcs.inc.php';
 
 // Get the notifications configuration
-$c = new Config('login.properties');
+$c = new Config('/config/login.properties');
 $username = $c->get('username', '');
 $password = $c->get('password', '');
 

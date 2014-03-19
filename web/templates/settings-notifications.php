@@ -4,7 +4,7 @@ include 'settings-tabs.inc.php';
 include 'funcs.inc.php';
 
 // Get the notifications configuration
-$c = new Config('gomd.properties');
+$c = new Config('/config/gomd.properties');
 ?>
 
 <div class="tab-body">

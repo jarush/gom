@@ -13,7 +13,7 @@ $app->get('/test', function () use($app) {
 });
 
 $app->post('/settings/notifications', $authMw, function() use($app) {
-  $config = new Config('gomd.properties');
+  $config = new Config('/config/gomd.properties');
   $req = $app->request();
 
   $boxcarEnabled = $req->post('boxcarEnabled');
@@ -61,7 +61,7 @@ $app->post('/settings/notifications', $authMw, function() use($app) {
     $config->set('email.to', $emailTo);
   }
 
-  if ($config->save('gomd.properties') === FALSE) {
+  if ($config->save('/config/gomd.properties') === FALSE) {
     $app->render('settings-notifications.php', array(
       'site'    => 'Garage',
       'title'   => 'Settings',
